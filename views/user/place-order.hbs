@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Order Form</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700');
+
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .d-flex {
+      display: flex;
+      flex-direction: row;
+      background: #f6f6f6;
+      border-radius: 0 0 5px 5px;
+      padding: 25px;
+    }
+
+    .address-section {
+      flex: 1;
+      padding-right: 15px;
+      overflow-x: auto;
+      white-space: nowrap;
+      margin-right: 10px; /* Added margin */
+    }
+
+    .bg-white.card.addresses-item {
+      display: inline-block;
+      width: 300px;
+      box-sizing: border-box;
+    }
+
+    .order-section {
+      flex: 1;
+      padding-left: 15px;
+    }
+
+    h2 {
+      margin: 0;
+      padding-left: 15px;
+    }
+
+    label,
+    table {
+      display: block;
+      margin: 15px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+      width: 70%;
+      height: 30px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      border: 1px solid #dadada;
+      color: #888;
+    }
+
+    select {
+      width: 72%;
+      height: 45px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+
+    .Yorder {
+      margin-top: 15px;
+      height: 600px;
+      padding: 20px;
+      border: 1px solid #dadada;
+    }
+
+    table {
+      margin: 0;
+      padding: 0;
+    }
+
+    th {
+      border-bottom: 1px solid #dadada;
+      padding: 10px 0;
+    }
+
+    tr>td:nth-child(1) {
+      text-align: left;
+      color: #2d2d2a;
+    }
+
+    tr>td:nth-child(2) {
+      text-align: right;
+      color: #52ad9c;
+    }
+
+    td {
+      border-bottom: 1px solid #dadada;
+      padding: 25px 25px 25px 0;
+    }
+
+    .Yorder>div {
+      padding: 15px 0;
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.47rem 0.75rem;
+      font-size: .875rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #545965;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #e2e5e8;
+      border-radius: 0.75rem;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 0.75rem;
+      -webkit-transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .ribbon {
+      position: absolute;
+      right: -26px;
+      top: 20px;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 1px 22px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .card {
+      margin-bottom: 24px;
+      -webkit-box-shadow: 0 2px 3px #e4e8f0;
+      box-shadow: 0 2px 3px #e4e8f0;
+    }
+
+    .section-container {
+      max-width: 75%;
+      background: #ece9e9;
+      margin: auto;
+      padding: 20px;
+      display: flex;
+      align-items: center; /* Align the scroll icon vertically */
+    }
+
+    .product-list-container {
+      position: relative;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      scrollbar-color: #333 #ccc;
+      cursor: pointer;
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .product-card {
+      position: relative;
+      flex: 0 0 auto;
+      width: 250px;
+      margin: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 8px ;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .new-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background-color: #FF5733;
+      color: white;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 0.8em;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Style scrollbar for Chrome, Safari, and Opera */
+    .product-list-container::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    .product-list-container::-webkit-scrollbar-thumb {
+      background: #333;
+    }
+
+    .product-list-container::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    .product-list-container::-webkit-scrollbar-track {
+      background: #ccc;
+    }
+
+    .scroll-icon {
+      font-size: 2em;
+      cursor: pointer;
+      margin-left: 20px; /* Spacing between the container and the arrow */
+    }
+
+    @media screen and (max-width: 600px) {
+      .product-card {
+        width: 90%;
+        margin: 10px;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="title">
+      <h2>Product Order Form</h2>
+    </div>
+    <form id="checkout-form">
+      <div class="d-flex">
+        <div class="address-section">
+          <a href="/user/place-address-order">
+            <button type="button" class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#add-address-modal" style="margin-bottom: 0.5cm;">Add New Address</button>
+          </a>
+          <!-- Placeholder for Handlebars template -->
+          {{!-- Display the JSON representation of the address data --}}
+          <h6>Select Address</h6>
+          <section class="section-container">
+                
+            <div class="product-list-container">
+              <div class="product-list" id="productList">
+                <!-- Product 1 -->
+                {{#each address}}
+                <div class="product-card">
+                  
+                        <div class="media-body">
+                          <h6 class="mb-1">Address 1</h6>
+                          <p>Name: {{this.firstName}}</p>
+                          <p>houseName: {{this.houseName}}</p>
+                          <p>townCity: {{this.townCity}}</p>
+                          <p>stateCounty: {{this.stateCounty}}</p>
+                          <p>postcodeZIP: {{this.postcodeZIP}}</p>
+                          <p>phone: {{this.phone}}</p>
+                          <p>Email: {{this.email}}</p>
+                          <!-- Add radio button for selecting the address -->
+                          <input type="radio" name="selected-address" value="{{this._id}}">
+                          <input type="hidden" id="selected-address-id" name="selected-address-id" value="{{this._id}}">
+                        </div>
+                      
+                </div>
+                {{/each}}
+              </div>
+            </div>
+            <div id="scrollRight" class="scroll-icon">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </section>
+        </div>
+
+        <input type="hidden" id="coupon-applicable" name="coupon-applicable" value="false">
+        <input type="hidden" id="applied-coupon" name="applied-coupon" value="">
+
+        <div class="order-section">
+          <div class="Yorder">
+            <table>
+              <tr>
+                <th colspan="2">Your order</th>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td id="total">{{amount}}</td>
+              </tr>
+              <tr id="discountbox" hidden>
+                <td>Discount</td>
+                <td id="discount-amount" style="color: red;"></td>
+              </tr>
+              <tr>
+                <td>Shipping</td>
+                {{#if shippingCharge}}
+                <td>₹50</td>
+                {{else}}
+                <td>Free shipping</td>
+                {{/if}}
+              </tr>
+              <hr>
+              <tr>
+                <td style="font-size: medium; font-weight: bold;">Grand Total</td>
+                <td style="font-size: medium; font-weight: bold;" id="totalamount">{{total}}</td>
+              </tr>
+            </table>
+
+            <div id="paymentbox">
+              <p style="font-size: medium; font-weight: bold;">Payment:</p>
+              {{#if COD}}           
+              <div>
+                <input type="radio" id="payment-method"  name="payment-method" value="COD"> Cash on Delivery
+              </div>
+              <div>
+                <input type="radio" id="payment-method" name="payment-method" value="ONLINE"> online payment
+                <span>
+                  <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg" alt="" width="50">
+                </span>
+              </div>
+              {{else}}
+               <input type="radio" id="payment-method" name="payment-method" value="ONLINE"> online payment
+              <h6 style="color: blue;"> Cash on Delivery (COD) option is not available for orders exceeding Rs 1000.</h6>
+              {{/if}}
+              <div  class="payment error" style="color: red;"></div>
+            </div>
+
+            <div class="coupon-section">
+              <input type="text" id="coupon-code" placeholder="Enter coupon code">
+              <button id="apply-coupon-btn" type="button" style="border: none; color: green;">Apply Coupon</button>
+              <button id="remove-coupon-btn" type="button" style="border: none; color: red; display: none;">Remove Coupon</button>
+              <div class="Name error" style="color: red;"></div>
+            </div>
+
+            <button type="submit" style="width: 100%; margin-top: 10px; padding: 10px; border: none; border-radius: 30px; background: #52ad9c; color: #fff; font-size: 15px; font-weight: bold;" onmouseover="this.style.background='#428a7d'" onmouseout="this.style.background='#52ad9c'">{{#if COD}}Place Order{{else}}Payment{{/if}}</button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+
+    <script>
+     
+      document.getElementById('checkout-form').addEventListener('submit', function (e) {
+        e.preventDefault();    
+        var selectedAddressId = document.querySelector('input[name="selected-address"]:checked').value;
+        
+        var paymentMethod = document.querySelector('input[name="payment-method"]:checked').value ;
+    var couponApplicable = document.getElementById('coupon-applicable').value;
+    var appliedCoupon = document.getElementById('applied-coupon').value;
+
+
+        $.ajax({
+          url: "/user/place-order-address",
+          method: 'post',
+          data: {
+            selectedAddressId: selectedAddressId,
+            paymentMethod: paymentMethod,
+             couponApplicable: couponApplicable,
+            appliedCoupon: appliedCoupon
+          },
+         
+          success: function (response) {
+            console.log("response", response);
+
+            if (response.codsuccess) {
+              location.href = "/user/ordersuccess?orderId=" + response.response._id;
+            } else if (response.response.errors) {
+              console.log("error message", response.response.errors);
+              document.querySelector('.payment.error').textContent = response.response.errors.paymentMethod || '';
+            }else{
+              console.log("response is:",response)
+                razorpayment(response);
+            }
+          },
+          error: function (error) {
+            console.log("error", error);
+          }
+        });
+      });
+
+
+  function razorpayment(order){
+    console.log("order is:",order)
+        console.log("amount is:",order.response.amount)
+
+    var amountInPaise = order.response.amount * 100;
+    console.log(amountInPaise)
+    var options = {
+    "key": "rzp_test_RL5JDiKZOe7ZgJ", // Enter the Key ID generated from the Dashboard
+    "amount":order.response.amount , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Style Savy",
+    "description": "Test Transaction",
+    "order_id": order.response.id,
+    "handler": function (response){     
+        verifyPayment(response,order)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000",
+        
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    },
+    "modal": {
+      "ondismiss": function () {
+        // Redirect to another page if payment is failed
+        console.log("hello",order.response.receipt)
+         location.href = "/user/orderfailed/" + order.response.receipt;
+      }
+    }
+};
+var rzp1 = new Razorpay(options);
+    rzp1.open();
+
+
+  }
+
+
+  function verifyPayment(payment,order){
+    $.ajax({
+      url:"/user/verify-payment",
+      data:{
+        payment,order
+      },
+      method:'post',
+      success:(response)=>{
+          console.log("success response",response)
+        if(response.status){
+        location.href = "/user/ordersuccessid?orderId=" + response.details.order.response.receipt;
+        }else{
+        location.href = "/user/orderfailed?orderId=" + response.details.order.response.receipt;
+        }
+      },
+       error: (error) => {
+      console.error("Error verifying payment:", error);
+      // Redirect to an error page
+      location.href = "/user/orderfailed";
+    }
+    })
+  }
+  
+document.addEventListener("DOMContentLoaded", function() {
+  const scrollRight = document.getElementById("scrollRight");
+  const productListContainer = document.querySelector(".product-list-container");
+
+  console.log("Initial Scroll Left:", productListContainer.scrollLeft);
+
+  scrollRight.addEventListener("click", function() {
+    console.log("Clicked!");
+    productListContainer.scrollBy({
+      top: 0, 
+      left: 620, 
+      behavior: 'smooth'
+    });
+    console.log("Scroll Left After:", productListContainer.scrollLeft);
+  });
+});
+
+
+  {{!-- apply coupon --}}
+
+function applyDiscount(discount) {
+  // Apply the discount to the order total
+  console.log("insside")
+  var currentTotal = parseFloat(document.getElementById('total').innerText);
+  var discountedTotal = currentTotal - discount;
+  console.log("amount",discountedTotal)
+    document.getElementById('discountbox').removeAttribute('hidden');
+  document.getElementById('discount-amount').innerText = discount.toFixed(2);
+    document.getElementById('totalamount').innerText = discountedTotal.toFixed(2); // Update the displayed total
+
+    document.getElementById('apply-coupon-btn').style.display = 'none';
+document.getElementById('remove-coupon-btn').style.display = 'inline-block';
+
+}
+
+  document.getElementById('apply-coupon-btn').addEventListener('click', function() {
+  // Get the entered coupon code
+  var couponCode = document.getElementById('coupon-code').value;
+   var currentTotal = parseFloat(document.getElementById('total').innerText);
+  // Send an AJAX request to validate the coupon
+  $.ajax({
+    url: "/user/validate-coupon",
+    method: 'post',
+    data: { couponCode: couponCode ,amount:currentTotal},
+    success: function(response) {
+      console.log("log",response)
+        if(response.response.matchedOffer){
+                console.log("log",response)
+                   document.getElementById('coupon-applicable').value = true;
+                  document.getElementById('applied-coupon').value = couponCode;
+        var discount = response.response.matchedOffer.discount;
+        console.log("dis:",discount)
+        applyDiscount(discount);
+ 
+
+        }
+        else{
+                console.log("logfg",response)
+
+          document.querySelector('.Name.error').textContent =response.response.errors|| '';
+
+        }
+     
+    },
+    error: function(error) {
+      console.log("Error validating coupon:", error);
+    }
+  });
+});
+
+document.getElementById('remove-coupon-btn').addEventListener('click', function() {
+  // Call the function to remove the discount
+    var couponCode = document.getElementById('coupon-code').value;
+    var currentTotal = parseFloat(document.getElementById('total').innerText);
+ $.ajax({
+    url: "/user/remove-coupon", // Replace with your backend endpoint for removing coupon
+    method: 'post',
+        data: { couponCode: couponCode },
+    success: function(response) {
+      // Update the UI after removing the coupon
+     
+      var updatedTotal = currentTotal + parseFloat(document.getElementById('discount-amount').innerText);
+      document.getElementById('totalamount').innerText = currentTotal.toFixed(2);
+
+      document.getElementById('coupon-applicable').value = false;
+document.getElementById('applied-coupon').value = '';
+
+      // Hide the discount box and remove coupon button
+      document.getElementById('discountbox').setAttribute('hidden', true);
+      document.getElementById('remove-coupon-btn').style.display = 'none';
+      
+      // Show the Apply Coupon button
+      document.getElementById('apply-coupon-btn').style.display = 'inline-block';
+      
+      // Clear the coupon code input field if needed
+      document.getElementById('coupon-code').value = '';
+    },
+    error: function(error) {
+      console.log("Error removing coupon:", error);
+    }
+  });
+});
+
+
+
+    </script>
+  </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Order Form</title>
+   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700');
+
+    body {
+      background: url('http://all4desktop.com/data_images/original/4236532-background-images.jpg');
+      font-family: 'Roboto Condensed', sans-serif;
+      color: #262626;
+      margin: 5% 0;
+    }
+
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1140px;
+      }
+    }
+
+    .d-flex {
+      display: flex;
+      flex-direction: row;
+      background: #f6f6f6;
+      border-radius: 0 0 5px 5px;
+      padding: 25px;
+    }
+
+    .address-section {
+      flex: 1;
+      padding-right: 15px; /* Add padding to create space between sections */
+    }
+
+    .order-section {
+      flex: 1;
+      padding-left: 15px; /* Add padding to create space between sections */
+    }
+
+    h2 {
+      margin: 0;
+      padding-left: 15px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    label,
+    table {
+      display: block;
+      margin: 15px;
+    }
+
+    label>span {
+      float: left;
+      width: 25%;
+      margin-top: 12px;
+      padding-right: 10px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+      width: 70%;
+      height: 30px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      border: 1px solid #dadada;
+      color: #888;
+    }
+
+    select {
+      width: 72%;
+      height: 45px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+
+    .Yorder {
+      margin-top: 15px;
+      height: 600px;
+      padding: 20px;
+      border: 1px solid #dadada;
+    }
+
+    table {
+      margin: 0;
+      padding: 0;
+    }
+
+    th {
+      border-bottom: 1px solid #dadada;
+      padding: 10px 0;
+    }
+
+    tr>td:nth-child(1) {
+      text-align: left;
+      color: #2d2d2a;
+    }
+
+    tr>td:nth-child(2) {
+      text-align: right;
+      color: #52ad9c;
+    }
+
+    td {
+      border-bottom: 1px solid #dadada;
+      padding: 25px 25px 25px 0;
+    }
+
+    p {
+      display: block;
+      color: #888;
+      margin: 0;
+      padding-left: 25px;
+    }
+
+    .Yorder>div {
+      padding: 15px 0;
+    }
+ 
+  </style>
+</head>
+<body>
+
+
+
+
+<div class="container">
+  <div class="title">
+    <h2>Edit address</h2>
+  </div>
+  <div class="d-flex">
+    <div class="address-section">
+      <form action="" method="" id="checkout-form">
+        <label>
+          <span class="fname"> Name <span class="required">*</span></span>
+          <input type="text" name="fname" value="{{fname}}">
+          <div class="Name error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span class="housename">House Name <span class="required">*</span></span>
+          <input type="text" name="housename" value="{{house}}">
+          <div class="Housename error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Town / City <span class="required">*</span></span>
+          <input type="text" name="city" value="{{town}}">
+           <div class="city error" style="color: red;"></div>
+         
+        </label>
+        <label>
+          <span>State / County <span class="required">*</span></span>
+          <input type="text" name="state" value="{{state}}">
+          <div class="country error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Postcode / ZIP <span class="required">*</span></span>
+          <input type="text" name="postcode" value="{{zip}}">
+          <div class="zipcode error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Phone <span class="required">*</span></span>
+          <input type="tel" name="phone" value="{{phn}}">
+          <div class="phone error" style="color: red;"></div>
+        
+        </label>
+        <label>
+          <span>Email Address <span class="required">*</span></span>
+          <input type="email" name="email" value="{{email}}">
+          <div class="email error" style="color: red;"></div>
+
+        </label>
+        <input type="text" name="userId" id="" value="{{userid}}" hidden>
+<button type="submit" class="btn bg-cart" style="background-color: #E96E6E; color: white; border-radius: 10px; height: 50px; width: 200px; font-size: 18px; font-weight: bold;">
+  Edit
+</button>
+    </div>
+
+
+        
+    
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+    $("#checkout-form").submit((e)=>{
+        e.preventDefault()
+        $("#checkout-form button[type='submit']").prop("disabled", true);
+        $.ajax({
+            url:"/user/edit-address/{{id}}",
+            method:'post',
+            data:$('#checkout-form').serialize(),
+            success:(response)=>{
+              console.log("respnse",response)
+              console.log("response error",response.response.errors)
+
+                if (response.status){
+                    location.href="/user/myAddress/{{userid}}"
+                } 
+                if (response.response.errors) {
+                console.log("error message",response.response.errors.paymentMethod)
+                // Update the error messages using the correct structure
+                document.querySelector('.Name.error').textContent =response.response.errors.address.firstName || '';
+                document.querySelector('.Housename.error').textContent = response.response.errors.address.houseName || '';
+                document.querySelector('.city.error').textContent = response.response.errors.address.townCity || '';
+                document.querySelector('.country.error').textContent = response.response.errors.address.stateCounty || '';
+                document.querySelector('.zipcode.error').textContent = response.response.errors.address.postcodeZIP || '';
+                document.querySelector('.phone.error').textContent = response.response.errors.address.phone || '';
+                document.querySelector('.email.error').textContent = response.response.errors.address.email || '';
+                document.querySelector('.payment.error').textContent = response.response.errors.paymentMethod || '';
+            }
+                
+                 $("#checkout-form button[type='submit']").prop("disabled", false);
+            }
+
+            })
+    })
+</script>

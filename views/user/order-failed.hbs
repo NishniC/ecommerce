@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed</title>
+    <style>
+        .bodydy {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 150px;
+        }
+        .failContainer {
+            background-color: #ffffff;
+            margin-top: 150px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #dc3545;
+        }
+        p {
+            color: #333333;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<div class="bodydy">
+    <div class="failContainer">
+        <h1>Payment Failed</h1>
+        <p>Unfortunately, your payment could not be processed at this time.</p>
+        <p>Please <a href="/user/myOrderPage/{{id}}">click here</a> to return to the your order page and try again.</p>
+        <button type="button" class="btn bg-cart" style="background-color: #C7B0E2; ">
+                    <a href="/user" style="text-decoration: none;"><i class="fa fa-cart-plus mr-2"></i> Continue Shopping</a>
+                </button>    
+    </div>
+</div>
+</html>

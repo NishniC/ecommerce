@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Replacement Successful</title>
+    <style>
+      
+        .cont{
+            max-width: 800px;
+            margin-top: 50px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: green;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container cont">
+        <h1>Return Initiated</h1>
+        <p>Your product return has been processed successfully.</p>
+        <p style="color: darkgoldenrod; font-size: small;" > Once the item has been picked up by our delivery agent, we will initiate the refund process.<br> Please note that it may take some time for the refund to reflect in your account.</p>
+        <ul>
+            <li><strong>Order ID:</strong> {{id}}</li>
+            <li><strong>Return Reason:</strong> {{reason}}</li>
+            <li><strong>Date:</strong> {{date}}</li>
+        </ul>
+        <p>If any enquiry contact us.Thank you for choosing our service.</p>
+                        <button type="button" class="btn bg-cart" style="background-color: #C7B0E2; ">
+                    <a href="/user" style="text-decoration: none;"><i class="fa fa-cart-plus mr-2"></i> Continue Shopping</a>
+                </button>        
+    </div>
+</body>
+</html>

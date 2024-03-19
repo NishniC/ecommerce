@@ -1,0 +1,471 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+  <link rel="stylesheet" href="https://fontawesome.com/v4.7.0/assets/font-awesome/css/font-awesome.css">
+<style>
+    .icon-control {
+    margin-top: 5px;
+    float: right;
+    font-size: 80%;
+}
+
+
+
+.btn-light {
+    background-color: #fff;
+    border-color: #e4e4e4;
+}
+
+.list-menu {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+.list-menu a {
+    color: #343a40;
+}
+
+.card-product-grid .info-wrap {
+    overflow: hidden;
+    padding: 18px 20px;
+}
+
+[class*='card-product'] a.title {
+    color: #212529;
+    display: block;
+}
+
+.card-product-grid:hover .btn-overlay {
+    opacity: 1;
+}
+.card-product-grid .btn-overlay {
+    -webkit-transition: .5s;
+    transition: .5s;
+    opacity: 0;
+    left: 0;
+    bottom: 0;
+    color: #fff;
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+}
+.img-wrap {
+    
+    position: relative;
+}
+.img-wrap img {
+    width: 100%; /* Add this line */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+}
+ .product-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .product-card {
+        width: 100%; /* Set initial width for each card */
+        padding-top:0.4cm ;
+    }
+
+    .product-card .card {
+        width: 100%; /* Ensure card takes full width of its container */
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* Set initial height for each card */
+    }
+</style>
+
+<div class="container" id="mbody" style="padding-top: 0.5cm;">
+	<div class="row">
+	<aside class="col-md-3">
+		
+<div class="card">
+    <div class="card-body">
+				<form class="pb-3" id="sForm">
+				<div class="input-group">
+				  <input type="text" class="form-control" id="sInput" placeholder="Search">
+				  <div class="input-group-append">
+				    <button class="btn btn-light" id="sButton" type="button"><i class="fa fa-search"></i></button>
+				  </div>
+				</div>
+				</form>
+
+			</div> 
+	<!-- filter-group  .// -->
+	<article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="" style="text-decoration: none;">
+				<i class="icon-control icon-control-2 fa fa-chevron-down" style="color: #d966ff; "></i>
+				<h6 class="title" style="color: #d966ff; ">Category Filters </h6>
+			</a>
+		</header>
+		<div class="filter-content filter-content-2 collapse show" id="collapse_2" style="">
+			<div class="card-body">
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" id="Men"  class="custom-control-input">
+				  <div class="custom-control-label">Mens Wear 
+				  	<b class="badge badge-pill badge-light float-right">120</b>  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" id="Women"  class="custom-control-input">
+				  <div class="custom-control-label">Womens Wear
+				  	<b class="badge badge-pill badge-light float-right">15</b>  </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" id="Girls" class="custom-control-input">
+				  <div class="custom-control-label">Girls Wear 
+				  	<b class="badge badge-pill badge-light float-right">35</b> </div>
+				</label>
+				<label class="custom-control custom-checkbox">
+				  <input type="checkbox" id="Boys" class="custom-control-input">
+				  <div class="custom-control-label">Boys Wear
+				  	<b class="badge badge-pill badge-light float-right">89</b> </div>
+				</label>
+	</div> <!-- card-body.// -->
+		</div>
+	</article> <!-- filter-group .// -->
+	<article class="filter-group">
+          <header class="card-header">
+            <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" style="text-decoration: none;" class="">
+              <i class="icon-control icon-control-3 fa fa-chevron-down" style="color: #d966ff; "></i>
+              <h6 class="title" style="color: #d966ff; ">Price range </h6>
+            </a>
+          </header>
+          <div class="filter-content filter-content-3 collapse show" id="collapse_3" style="">
+            <div class="card-body">
+              <label class="custom-control custom-radio">
+                <input type="radio" id="price_0_1000" name="price_range" class="custom-control-input">
+                <div class="custom-control-label">Below ₹1000</div>
+              </label>
+              <label class="custom-control custom-radio">
+                <input type="radio" id="price_1000_2000" name="price_range" class="custom-control-input">
+                <div class="custom-control-label">₹1000 - ₹2000</div>
+              </label>
+              <label class="custom-control custom-radio">
+                <input type="radio" id="price_2000_3000" name="price_range" class="custom-control-input">
+                <div class="custom-control-label">₹2000 - ₹3000</div>
+              </label>
+              <label class="custom-control custom-radio">
+                <input type="radio" name="price_range" id="price_3000_4000" class="custom-control-input">
+                <div class="custom-control-label">₹3000 - ₹4000</div>
+              </label>
+              <label class="custom-control custom-radio">
+                <input type="radio" name="price_range" id="price_4000_125000" class="custom-control-input">
+                <div class="custom-control-label">Above ₹4000</div>
+              </label>
+            </div><!-- card-body.// -->
+          </div>
+        </article><!-- filter-group .// -->
+	<article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" style="text-decoration: none;" class="">
+				<i class="icon-control icon-control-4 fa fa-chevron-down" style="color: #d966ff; "></i>
+				<h6 class="title" style="color: #d966ff; ">Sizes </h6>
+			</a>
+		</header>
+		<div class="filter-content filter-content-4 collapse show" id="collapse_4" style="">
+			<div class="card-body">
+			  <label class="checkbox-btn">
+			    <input type="checkbox" id="xs">
+			    <span class="btn btn-light btn-sm"  style="font-size: x-small;"> XS </span>
+			  </label><br>
+
+			  <label class="checkbox-btn">
+			    <input type="checkbox" id="s">
+			    <span class="btn btn-light btn-sm" style="font-size: x-small;"> S </span>
+			  </label><br>
+
+			  <label class="checkbox-btn">
+			    <input type="checkbox" id="l">
+			    <span class="btn btn-light btn-sm" style="font-size: x-small;"> L</span>
+			  </label><br>
+
+			  <label class="checkbox-btn">
+			    <input type="checkbox" style="padding-left: 0.5cm;" id="xl">
+			    <span class="btn btn-light btn-sm" style="font-size: x-small;"> XL </span>
+			  </label>
+		</div><!-- card-body.// -->
+		</div>
+	</article> <!-- filter-group .// -->
+	<article class="filter-group">
+		<header class="card-header">
+			<a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" style="text-decoration: none;" class="">
+				<i class="icon-control icon-control-5 fa fa-chevron-down" style="color: #d966ff; "></i>
+				<h6 class="title" style="color: #d966ff; ">More filter </h6>
+			</a>
+		</header>
+		<div class="filter-content filter-content-5 collapse in" id="collapse_5" style="">
+			<div class="card-body">
+				<label class="custom-control custom-radio">
+				  <input type="radio" name="myfilter_radio" checked="" class="custom-control-input">
+				  <div class="custom-control-label">Any condition</div>
+				</label>
+
+				<label class="custom-control custom-radio">
+				  <input type="radio" name="myfilter_radio" class="custom-control-input">
+				  <div class="custom-control-label">Brand new </div>
+				</label>
+
+				<label class="custom-control custom-radio">
+				  <input type="radio" name="myfilter_radio" class="custom-control-input">
+				  <div class="custom-control-label">Used items</div>
+				</label>
+
+				<label class="custom-control custom-radio">
+				  <input type="radio" name="myfilter_radio" class="custom-control-input">
+				  <div class="custom-control-label">Very old</div>
+				</label>
+			</div><!-- card-body.// -->
+		</div>
+	</article> <!-- filter-group .// -->
+</div> <!-- card.// -->
+
+	</aside>
+	<main class="col-md-9">
+
+<header class="border-bottom mb-4 pb-3">
+		<div class="form-inline">
+			<span class="mr-md-auto"><span id="noItem">{{length}}</span> Items found </span>
+			<select class="mr-2 form-control">
+				<option>Latest items</option>
+				<option>Trending</option>
+				<option>Most Popular</option>
+				<option>Cheapest</option>
+			</select>
+			<div class="btn-group">
+				<a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
+					<i class="fa fa-bars"></i></a>
+				<a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
+					<i class="fa fa-th"></i></a>
+			</div>
+		</div>
+</header><!-- sect-heading -->
+
+
+<div class="row" id="productdetails">
+                <!-- Products -->
+                {{#each products}}
+                <div class="col-md-4 product-card" >
+                    <figure class="card card-product-grid">
+                        <div class="img-wrap"> 
+                            <img src="data:{{this.images.[0].contentType}};base64,{{this.images.[0].imageBase64}}" style="height: 300px; object-fit: cover;" class="img-fluid">
+                            <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
+                        </div>
+                        <figcaption class="info-wrap">
+                            <div class="fix-height">
+                                <div style="height: 1cm;">
+                                <a href="#" class="title">{{this.Name}}</a>
+                                </div>
+                                
+                                <div class="price-wrap mt-3 text-center" style="height: 1cm;" >
+                                    <span class="price" >₹{{this.price}}</span>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-block btn-primary">Add to cart </a>    
+                        </figcaption>
+                    </figure>
+                </div>
+                {{#if @index}}
+                    {{#if @index_mod_3}}
+                        <div class="w-100"></div><!-- Add a new row after every third product -->
+                    {{/if}}
+                {{/if}}
+                {{/each}}
+            </div> <!-- col.// -->
+
+
+
+
+<nav class="mt-4" aria-label="Page navigation sample" id="pagination">
+         <div class="col-lg-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">                    
+                    {{#times pages}}                     
+                    {{#ifCond this '==' ../currentPage}}                   
+                        <li class="page-item active"><a class="page-link" href="/user/productsfilter?page={{this}}">{{this}}</a></li>                        
+                    {{else}}                   
+                        <li class="page-item"><a class="page-link" href="/user/productsfilter?page={{this}}">{{this}}</a></li>                        
+                    {{/ifCond}}
+                    {{/times}}
+                </ul>
+            </nav>
+        </div>
+</nav>
+
+	</main>
+	</div>
+</div>
+
+
+<script>
+
+const Input = document.getElementById('sInput');
+const Button = document.getElementById('sButton');
+const Form = document.getElementById('sForm');
+
+Button.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    const query = Input.value.trim();
+    if (query !== '') {
+        fetch(`/user/search?query=${query}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Search results:', data);
+                if(data.success){
+                    if(data.msg){
+                        $('#pagination').empty();
+                        $('#noItem').text(0);
+                        $('#productdetails').html('<div class="col-md-12"><div class="alert alert-warning" role="alert">No products found.</div></div>');
+  
+                    }else{
+                    $('#noItem').text(data.length);
+                     renderProducts(data.data);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+            });
+    }
+});
+
+
+
+
+
+    
+$(document).ready(function(){
+    // Hide all filter content initially
+    $('.filter-content').hide();
+    
+    // Toggle filter content when clicking on the arrow icons
+
+
+    $('.icon-control-1').click(function(){
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+        $(this).closest('.card').find('.filter-content-1').slideToggle();
+    });
+
+    $('.icon-control-2').click(function(){
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+        $(this).closest('.card').find('.filter-content-2').slideToggle();
+    });
+
+    $('.icon-control-3').click(function(){
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+        $(this).closest('.card').find('.filter-content-3').slideToggle();
+    });
+
+    $('.icon-control-4').click(function(){
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+        $(this).closest('.card').find('.filter-content-4').slideToggle();
+    });
+
+    $('.icon-control-5').click(function(){
+        $(this).toggleClass('fa-chevron-down fa-chevron-up');
+        $(this).closest('.card').find('.filter-content-5').slideToggle();
+    });
+});
+
+
+$(document).ready(function(){
+    // Function to handle the selection of price range radio buttons and category checkboxes
+    $('#collapse_3 input[type="radio"], #collapse_2 input[type="checkbox"], #collapse_4 input[type="checkbox"]').change(function() {
+        // Get the selected price range value
+        var selectedPriceRange = $('input[name="price_range"]:checked').attr('id');
+        // Get the selected category values
+        var selectedCategories = $('#collapse_2 input[type="checkbox"]:checked').map(function() {
+            return this.id;
+        }).get();
+
+            var selectedSizes =$('#collapse_4 input[type="checkbox"]:checked').map(function() {
+            return this.id;
+           }).get();
+           let details={price_range: selectedPriceRange, categories: selectedCategories,sizes: selectedSizes}
+        // Make an AJAX request to the backend with the selected values
+        $.ajax({
+            url: '/user/productfilter?page=1', // Replace 'backend_endpoint_url' with your backend endpoint URL
+            method: 'POST', // Use POST method to send data to the backend
+            data: { price_range: selectedPriceRange, categories: selectedCategories,sizes: selectedSizes }, // Send the selected values to the backend
+            success: function(response) {
+                console.log(response);
+                if(response.success){
+                    console.log("response:",response);
+                     $('#noItem').text(response.length);
+                     renderProducts(response.products);
+                     $('#pagination').empty();
+                     updatePagination(response.currentPage, response.pages,details);
+                    
+                }
+                else{
+                    $('#pagination').empty();
+                        $('#noItem').text(0);
+                    $('#productdetails').html('<div class="col-md-12"><div class="alert alert-warning" role="alert">No products found.</div></div>');
+                
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle errors if any
+                console.error(error);
+            }
+        });
+    });
+});
+
+function updatePagination(currentPage, totalPages,details) {
+    var paginationHtml = '';
+    var queryString = $.param(details);
+    console.log(details)
+    for (var i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+    paginationHtml += '<ul class="pagination"> <li class="page-item active"><a class="page-link" href="#">' + i + '</a></li></ul>';
+} else {
+    paginationHtml += '<ul class="pagination"> <li class="page-item"><a class="page-link" href="/user/product-pagination?page=' + i + '&details=' + encodeURIComponent(queryString) + '">' + i + '</a></li></ul>';
+
+}
+
+    }
+    $('#pagination').html(paginationHtml);
+}
+
+
+function renderProducts(products) {
+    // Clear existing products
+    $('#productdetails').empty();
+    // Iterate over each product in the response and append HTML to product body
+    products.forEach(function(product) {
+        var productHTML = `
+            <div class="col-md-4 product-card">
+                <figure class="card card-product-grid">
+                    <div class="img-wrap"> 
+                        <img src="data:${product.images[0].contentType};base64,${product.images[0].imageBase64}" style="height: 300px; object-fit: cover;" class="img-fluid">
+                        <a class="btn-overlay" href="#"><i class="fa fa-search-plus"></i> Quick view</a>
+                    </div>
+                    <figcaption class="info-wrap">
+                        <div class="fix-height">
+                            <div style="height: 1cm;">
+                                <a href="#" class="title">${product.Name}</a>
+                            </div>
+                            <div class="price-wrap mt-3 text-center" style="height: 1cm;">
+                                <span class="price">₹${product.price}</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-block btn-primary">Add to cart </a>    
+                    </figcaption>
+                </figure>
+            </div>
+        `;
+        $('#productdetails').append(productHTML);
+    });
+}
+
+</script>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-HL3RQK1Vz3+aD7bEHJ9mFY6uxlir0LVItHMmtiCkgvZN0j3jra91heBSa73lgJG9N3RZiyi6GZLDDYVe9fjs+A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+  <style>
+    @media (min-width: 1025px) {
+      .h-custom {
+        height: 100vh !important;
+      }
+    }
+
+    .product-row {
+      border-bottom: 1px solid #dee2e6;
+      padding: 15px 0;
+    }
+
+    .product-image {
+      width: 120px;
+      margin-right: 20px;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+    }
+
+    .quantity-input {
+      width: 50px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<section class="h-100 h-custom" style="margin-bottom: 100px;">
+  <div class="container h-100 py-5">
+    <div class="row"> <!-- Removed center-table class -->
+      <div class="col">
+        <div class="table-responsive">
+          <table class="table" id="myTable">
+            <thead>
+              <tr>
+                <th scope="col" class="h5">Date</th>
+                <th scope="col">Name</th>
+                <th scope="col">Pincode</th>
+                <th scope="col">Ph.No</th>
+                <th scope="col">Total Amount</th>
+                <th scope="col">Status</th>
+                <th scope="col">Details</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {{#each orders}}
+                <tr class="product-row">
+                  <td>{{this.formattedDate}}</td>
+                  <td>{{this.address.firstName}}</td>
+                  <td>{{this.address.postcodeZIP}}</td>
+                  <td>{{this.address.phone}}</td>
+                  <td>{{this.totalAmount}}</td>
+                  <td>
+                    {{#if products}}
+
+                          {{#if this.delivered}}
+                            <span class="badge rounded-pill alert-success">{{this.status}}</span>
+                          {{else}}
+                                {{#ifCond this.status '===' 'pending'}}
+                                    <span class="badge rounded-pill alert-warning">pending</span>
+                                   {{else}}
+                            <span class="badge rounded-pill alert-info">{{this.status}}</span>
+                            {{/ifCond}}
+                          {{/if}}
+                    {{else}}
+                    <span class="badge rounded-pill alert-danger">cancelled</span>
+                    {{/if}}
+                    </td>
+                  <td>
+
+                    
+                     {{#if products}}
+                        {{#if delivered}}
+                            <a href="/user/view-delivered-products/{{this._id}}" class="btn btn-success">View Details</a>
+                        {{else}}
+                            {{#ifCond this.status '===' 'pending'}}
+                                <a href="/user/view-pending-products/{{this._id}}" class="btn btn-warning">View Details</a>
+                            {{else}}
+                                <a href="/user/view-order-products/{{this._id}}" class="btn btn-primary">View Products</a>
+                            {{/ifCond}}
+                            
+                        {{/if}}
+                    {{else}}
+                      <a href="/user/view-order-products/{{this._id}}" class="btn btn-danger">Cancel Details</a>
+                    {{/if}}
+                  </td>
+                  
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>

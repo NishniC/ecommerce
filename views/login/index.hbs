@@ -1,0 +1,158 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<style>
+  .error {
+    color: red;
+  }
+</style>
+    <title>welcome</title>
+  </head>
+  <body>
+    
+<section class="login-block">
+    <div class="container">
+	<div class="row">
+		<div class="col-md-4 login-sec" >
+		    
+        <h2 class="text-center" style=" color: #471AA0;">Login Now</h2>
+		   <div id="flash-messages" class="container">
+       {{#if messages.error}}
+<div class="alert alert-danger">{{messages.error}}</div>
+{{/if}}
+   {{#if messages.success}}
+<div class="alert alert-success">{{messages.success}}</div>
+{{/if}}  
+      
+  </div>
+        <form class="login-form">
+  <div class="form-group">
+   
+    <input type="text" name="email" class="form-control" placeholder="Email">
+     <div class="email error"></div>
+  </div>
+  <div class="form-group">
+    <input type="password" name="password" class="form-control" placeholder="Password">
+  <div class="password error"></div>
+  </div>
+  
+  
+    <div class="text-center pt-1 mb-5 pb-1">
+   <button class="btn  btn-block fa-lg gradient-custom-2 mb-3" style="background-color: #BB84E8; border-radius: 50p; width: 230px; margin: 0 auto; color:white;" >Log
+                      in</button> 
+                    <a class="text-muted" href="#!">Forgot password?</a>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-center pb-4">
+                    <p class="mb-0 me-2">Don't have an account? </p>
+                     <div class="btn-group me-2">
+                        <a href="/login/signup" style="color: #471AA0;">Create new</a>
+                    </div>
+                   
+                  </div>
+  
+</form>
+		</div>
+		<div class="col-md-8 banner-sec">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                 <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                  </ol>
+            <div class="carousel-inner" role="listbox">
+    <div class="carousel-item active">
+      <img class="d-block img-fluid" src="/images/slide2.avif" style="object-fit: cover; height: 500px; width: 1847px;">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="banner-text">
+            <h2>"Fashion at Your Fingertips, Trend at Your Doorstep."</h2>
+            <p>Elevate your style effortlessly with our commerce dressing web app, where every click brings you closer to a world of chic choices and fashion-forward delights</p>
+
+        </div>	
+  </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block img-fluid"  src="/images/fashion.jpg" style="object-fit: cover; height: 500px; width: 1847px;">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="banner-text">
+            <h2>Exciting Offers</h2>
+        </div>	
+    </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block img-fluid" src="/images/slide3.avif" style="object-fit: cover; height: 500px; width: 1847px;">
+      <div class="carousel-caption d-none d-md-block">
+        <div class="banner-text">
+        <h2>"Fashion at Your Fingertips, Trend at Your Doorstep."</h2>
+        </div>	
+    </div>
+  </div>
+            </div>	   
+		    
+		</div>
+	</div>
+</div>
+</div>
+</section>
+
+
+
+  <script>
+ document.addEventListener('DOMContentLoaded', (event) => {
+  console.log("The DOM content has loaded.");
+
+  const form = document.querySelector('form');
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      const res = await fetch("/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Login successful. User ID:", data.user);
+        if (data.role === "admin") {
+          location.assign('/admin');
+        } else {
+          location.assign('/user');
+        }
+      } else {
+        // Handle the case where the server returns an error status
+        console.log("Login failed. Server returned status:", res.status);
+        const data = await res.json(); // You can examine the response data for more details
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+    } catch (err) {
+      console.error("Error during login:", err);
+    }
+  });
+});
+
+</script>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

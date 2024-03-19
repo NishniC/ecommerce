@@ -1,0 +1,35 @@
+
+
+                            <form id="signup-form"   action="/admin/edit-user/{{useredit._id}}" method="Post" >
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="formFirstName" name="firstName" class="form-control form-control-lg" value="{{useredit.firstName}}" style="border-color: #b382f5;" />
+                                            <div class="firstName error"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="formLastName" name="lastName" class="form-control form-control-lg"  value="{{useredit.lastName}}"  style="border-color: #b382f5;" />
+                                            <div class="lastName error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="formEmail" name="email" class="form-control form-control-lg"  value="{{useredit.email}}" style="border-color: #b382f5;" />
+                                    <div class="email error"></div>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="formPassword" name="password" class="form-control form-control-lg"  value="{{useredit.password}}" style="border-color: #b382f5;" />
+                                    <div class="password error"></div>
+                                </div>
+
+                         
+                                <div class="d-flex justify-content-end pt-3">
+                                    <button type="submit" class="btn btn-lg ms-2" style="background-color: #b382f5;">Edit</button>
+                                </div>
+                            </form>
+
+                         

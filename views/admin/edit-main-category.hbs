@@ -1,0 +1,93 @@
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            height: 84vh;
+        }
+
+        .form-container {
+            margin-top: 3cm;
+            display: flex;
+            flex-direction: column;
+            height: 7cm;
+            width: 15cm;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        .form-container form {
+            margin-top: 20px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .form-container input {
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-container button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+
+
+<div class="main-container">
+    <div class="form-container">
+        <form action="" method=""  id="form">
+            <label for="categoryName">Category Name:</label>
+            <input type="text" id="categoryName" name="categoryName" required value="{{category.name}}"><br>
+            <div class="name error" style="color: red;"></div>
+
+            <button type="submit">Add Category</button>
+        </form>
+    </div>
+</div>
+
+</body>
+
+<script>
+    $("#form").submit((e) => {
+        e.preventDefault();
+        $("#form button[type='submit']").prop("disabled", true);
+        $.ajax({
+            url: "/admin/editMainCategory/{{category._id}}",
+            method: 'post',
+            data: $('#form').serialize(),
+            success: (response) => {
+                console.log("response", response);
+                console.log("response error", response.response.errors);
+                if (response.status){
+                    location.href="/admin//view-mainCategory"
+                } 
+                if (response.response.errors) {
+                document.querySelector('.name.error').textContent =response.response.errors  || '';
+            }
+
+             $("#form button[type='submit']").prop("disabled", false);
+            }, 
+            error: (error) => {
+                console.error("AJAX request failed:", error);
+            }
+        });
+    });
+</script>
+</html>

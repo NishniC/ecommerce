@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+     #orderDetailsSection {
+            display: none; /* Initially hide the order details section */
+        }
+               .salespage @page {
+            size: A4;
+            margin: 0;
+        }
+
+        .sales-container
+        {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .sales {
+            background: #fff;
+            color: #666666;
+            border-radius: 2px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            padding: 20px;
+        }
+
+
+
+
+
+       .salespage h1
+        {
+            text-align: center;
+        }
+
+        .report-section
+        {
+            margin-bottom: 30px;
+        }
+
+
+
+
+
+        .sales h2 {
+            margin-top: 0;
+            line-height: 1em;
+        }
+
+
+        .sales table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+
+        .sales table th,
+        .sales table td
+        {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+
+        #pdfButton {
+            border-radius: 20px;
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; /* Adjust as needed */
+        }
+                .back{
+        border-radius: 20px;
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* Adjust as needed */
+            text-decoration:none;
+        }
+        #excelButton {
+            border-radius: 20px;
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; /* Adjust as needed */
+        }
+                .back{
+        border-radius: 20px;
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* Adjust as needed */
+            text-decoration:none;
+        }
+
+
+</style>
+
+</head>
+
+<body>
+<div class="container ">
+    <div class="row">
+        <div class="col-xs-12">
+            <center>
+            <div class="d-flex justify-content-center">
+                <a href="/admin/view-yearsalesreport" class="btn btn-success mx-2 not_active" style="background-color:white;color:green;">Year</a>
+                <a href="/admin/view-weeksalesreport" class="btn btn-success mx-2 not_active" style="background-color:white;color:green;">Week</a>
+                <a href="/admin/view-dailysalesreport" class="btn btn-success mx-2 active" style="background-color:white;color:green;">Day</a>
+                <a href="/admin/view-customizesalesreport" class="btn btn-success mx-2 active" style=" background-color:#088178">Customize Report</a>
+
+            </div>
+           </center>
+        </div>
+    </div>
+</div> 
+<div class="container mt-5">
+    <form id="dateRangeForm">
+        <div class="form-row align-items-end">
+            <div class="col-md-4">
+                <label for="fromDate">From Date:</label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate" max="{{todayDateString}}">
+            </div>
+            <div class="col-md-4">
+                <label for="toDate">To Date:</label>
+                <input type="date" class="form-control" id="toDate" name="toDate" max="{{todayDateString}}">
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary btn-block" >Generate Report</button>
+            </div>
+        </div>
+    </form>
+
+     <div id="orderDetailsSection" >
+        <div class="sales-container">       
+    <div class="report-section mt-5">
+        <h2>Sales Summary</h2>
+        <p>Total Orders: <span id="totalOrders"></span></p>
+        <p>Success Orders: <span id="successfulOrders"></span></p>
+        <p>Total Sales: ₹ <span id="totalSales"></span>/-</p>
+        <p>Average Order Value: ₹ <span id="averageOrderValue"></span></p>
+    </div>
+
+                    <br> <hr> <br>
+  <div class="row">
+        <div class="col-md-12">
+            <h2>Product Performance</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr class="line">
+                        <th class="text-left"><strong>Product</strong></th>
+                        <th class="text-right"><strong>Quantity Sold</strong></th>
+                        <th class="text-right"><strong>Revenue</strong></th>
+                    </tr>
+                </thead>
+                <tbody id="productPerformanceBody">
+                    <!-- Product performance data will be displayed here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+                    <br><hr><br>
+
+
+
+                     <div class="row">
+        <div class="table-responsive col-md-12">
+            <h2>Success Orders</h2><br>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Payment</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="successOrdersBody">
+                    <!-- Success orders data will be displayed here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div> 
+    <div class="row">
+    <div class="col-md-12 text-right">
+            <a href="{% url 'admin_home' %}" class="back">Bcak To Dashboard</a>
+            <button id="pdfButton">Download PDF Report</button>
+            <button id="excelButton">Download Excel</button>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+<script>
+    $(document).ready(function(){
+        // Get today's date
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, "0");
+        var day = String(today.getDate()).padStart(2, "0");
+        var todayDateString = `${year}-${month}-${day}`;
+
+        // Set max attribute for date inputs
+        $('#fromDate, #toDate').attr('max', todayDateString);
+        function populateSalesSummary(summary) {
+            $('#totalOrders').text(summary.totalOrders);
+            $('#successfulOrders').text(summary.successfulOrders);
+            $('#totalSales').text(summary.totalSales);
+            $('#averageOrderValue').text(summary.averageOrderValue);
+        }
+
+        // Function to populate product performance table
+        function populateProductPerformance(productsales) {
+            var productPerformanceBody = $('#productPerformanceBody');
+            productPerformanceBody.empty(); // Clear existing data
+            $.each(productsales.result, function(index, product) {
+                var row = '<tr>' +
+                            '<td>' + product.productName + '</td>' +
+                            '<td class="text-right">' + product.quantitySold + '</td>' +
+                            '<td class="text-right">₹' + product.revenue + '/-</td>' +
+                          '</tr>';
+                productPerformanceBody.append(row);
+            });
+        }
+
+        
+        // Function to populate success orders table
+        function populateSuccessOrders(userwisesales) {
+            var successOrdersBody = $('#successOrdersBody');
+            successOrdersBody.empty(); // Clear existing data
+            $.each(userwisesales.result, function(index, order) {
+                var row = '<tr>' +
+                            '<td>' + order.referenceNo + '</td>' +
+                            '<td><b>' + order.username + '</b></td>' +
+                            '<td>' + order.email + '</td>' +
+                            '<td>₹' + order.price + '</td>' +
+                            '<td>' + order.paymentMethod + '</td>' +
+                            '<td><span class="badge rounded-pill alert-info">' + order.status + '</span></td>' +
+                          '</tr>';
+                successOrdersBody.append(row);
+            });
+        }
+
+        // Handle form submission
+        $('#dateRangeForm').submit(function(event){
+            event.preventDefault();
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '/admin/generate-sales-report',
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function(response){
+                    console.log(response);
+                    $('#orderDetailsSection').show();
+                    populateSalesSummary(response.summary);
+                    populateProductPerformance(response.productsales);
+                    populateSuccessOrders(response.userwisesales);
+                },
+                error: function(xhr, status, error){
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+
+     document.getElementById("pdfButton").addEventListener("click", function () {
+        const salesContainer = document.querySelector(".sales-container");
+        const pdfOptions = {
+            filename: 'TodaysSalesReport.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().from(salesContainer).set(pdfOptions).save();
+    });
+    document.getElementById("excelButton").addEventListener("click", function () {
+        const table = document.querySelector(".table");
+        const ws = XLSX.utils.table_to_sheet(table);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'TodaysSalesReport.xlsx');
+    });
+</script>
+
+</body>
+</html>

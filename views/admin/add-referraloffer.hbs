@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Coupons</title>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Style for the remove button */
+        .remove-button {
+            color: red;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ml-5 text-center">
+                    <h2 class="ml-3 mt-3">Add Referal Category</h2>
+                </div>
+            </div>
+        </div>
+        <form id="formsub">
+            <div class="row m-5 p-3" style="background-color:white;">
+                <div class="col-lg-6 primary">
+                    <div class="mb-3">
+                        <label class="form-label" for="offer_name">Offer Name</label>
+                        <input type="text" class="form-control" id="offer_name" name="offer_name" placeholder="" />
+                        <div class="offername error" style="color: red;"></div>
+                    </div>
+                    <div class="mb-3">
+                    <label for="">enter refferal code </label>
+                    <input type="text" class="form-control" id="ref_code" name="ref_code" placeholder="" />
+                    <div class="referal error" style="color: red;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="">Minimum Amount</label>
+                        <input type="text" class="form-control" id="min_amount" name="min_amount" placeholder="" />
+                        <div class="minimum error" style="color: red;"></div>
+                    </div>
+                    <!-- Selected products will be displayed here -->
+                    <div id="selectedProducts"></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="typeoffer">Type</label>
+                        <select name="typeoffer" id="typeoffer" class="form-control">
+                            <option value="Percentage">Percentage</option>
+                            <option value="Flat Offer">Flat offer</option>
+                        </select>
+                        <div class="typeoffer error" style="color: red;"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mb-3">
+                        <label class="form-label" for="minimum_amount">Discount</label>
+                        <input type="text" class="form-control" id="minimum_amount" name="discount" placeholder="" />
+                        <div class="discount error" style="color: red;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="valid_from">Valid From</label>
+                        <input type="datetime-local" class="form-control" id="valid_from" name="valid_from" />
+                        <div class="from error" style="color: red;"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="valid_to">Valid To</label>
+                        <input type="datetime-local" class="form-control" id="valid_to" name="valid_to" />
+                        <div class="to error" style="color: red;"></div>
+                    </div><br><br><br>
+                    <button type="submit" class="btn btn-primary">Add referal Coupon</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Function to handle adding selected products
+        function addSelectedProduct() {
+            var selectedProducts = $('#category').val();
+            // Clear previous selections
+            $('#selectedProducts').empty();
+            if (selectedProducts && selectedProducts.length > 0) {
+                selectedProducts.forEach(function(product) {
+                    // Create a new div to display the selected product
+                    var productDiv = $('<div class="selected-product"></div>');
+                    productDiv.text(product);
+
+                    // Create a button to remove the selected product
+                    var removeButton = $('<button class="remove-button ml-2">X</button>');
+                    removeButton.click(function() {
+                        productDiv.remove();
+                    });
+
+                    // Append the remove button to the product div
+                    productDiv.append(removeButton);
+
+                    // Append the product div to the selected products container
+                    $('#selectedProducts').append(productDiv);
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            // Call the function to add selected product when selection changes
+            $('#category').change(addSelectedProduct);
+
+            // Handle form submission
+            $("#formsub").submit((e) => {
+                e.preventDefault();
+                $.ajax({
+                    url: "/admin/add-referaloffer",
+                    method: 'post',
+                    data: $('#formsub').serialize(),
+                    success: (response) => {
+                        console.log("response", response);
+                        location.href = "/admin/view-referaloffer"
+                    },
+                    error: (xhr, status, error) => {
+                        try {
+                            const errorObj = JSON.parse(xhr.responseText);
+                            console.log("err:",errorObj)
+                            document.querySelector('.referal.error').textContent = errorObj.message.referenceId || '';
+                            document.querySelector('.offername.error').textContent = errorObj.message.offer_name || '';
+                            document.querySelector('.to.error').textContent = errorObj.message.valid_to || '';
+                            document.querySelector('.from.error').textContent = errorObj.message.valid_from || '';
+                            document.querySelector('.discount.error').textContent = errorObj.message.discount || '';
+                            document.querySelector('.typeoffer.error').textContent = errorObj.message.typeoffer || '';
+                            document.querySelector('.minimum.error').textContent = errorObj.message.maxAmount || '';
+                        } catch (parseError) {
+                            console.error("Error parsing response:", parseError);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

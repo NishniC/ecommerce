@@ -1,0 +1,171 @@
+<style>
+    .selected-image {
+    max-width: 100%; /* Ensure image doesn't exceed container width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure the image is displayed as a block element */
+    margin: 10px auto; /* Add some margin around the image */
+    width: 200px; /* Set a fixed width for the image */
+    
+}
+</style>
+
+<section>
+    <div class="container mt-4">
+        <div id="flash-messages" class="container"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="text-center">Add Product</h2>
+                <form id="product-form"  action="/admin/add-product" method="post" enctype="multipart/form-data">
+                    <label for="">Name</label>
+                    <input type="text" name="Name" class="form-control">
+                    <div class="name error" style="color: red;"></div>
+                    <label for="">Brand</label>
+                    <select name="brand" id="brand" class="form-control">
+                        <option value="" disabled selected>Select Brand</option>
+                        <option value="Adidas">Adidas</option>
+                         <option value="Levi's">Levi's</option>
+                          <option value="Allen Solly">Allen Solly</option>
+                           <option value="Zara">Zara</option>
+                            <option value="Biba">Biba</option>
+                             <option value="Fabindia">Fabindia</option>
+                    </select>
+                    <label for="">Category</label>
+                    <select name="Category" id="category" class="form-control">
+                        <option value="" disabled selected>Select Category</option>
+                        {{#each categories}}
+                        <option value="{{this.name}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                    <div class="category error" style="color: red;"></div>
+                    <label id="subcategorylabel" for="">Subcategory</label>
+                    <select name="subcategory" id="subcategory" class="form-control">
+                        <option value="" disabled selected>Select subCategory</option>
+                    </select>
+                    <div class="sub error" style="color: red;"></div>
+                    <label for="">Price</label>
+                    <input type="text" name="price" class="form-control">
+                    <div class="price error" style="color: red;"></div>
+                    <label for="">Description</label>
+                    <input type="text" name="Description" class="form-control">
+                    <div class="description error" style="color: red;"></div>
+                    <label for="quantity">Quantity</label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" min="1" max="50">
+                    <div class="quantity error" style="color: red;"></div>
+                    <label for="">Image</label>
+                    <input type="file" name="images" class="form-control" accept="image/*" id="imageInput" multiple>
+                    <div id="selectedImages"></div>
+                    <div class="image error" style="color: red;"></div>
+                    <button type="submit" class="btn mt-4" style="background-color: #BB84E8; border-radius: 50px; width: 230px; height: 30px; margin: 0 auto; color:white;">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#category').change(function () {
+            var selectedCategory = $(this).val();
+
+            // Send an AJAX request to fetch subcategories for the selected main category
+            $.ajax({
+                url: `/admin/get-subcategories/${selectedCategory}`,
+                method: 'GET',
+                success: function (response) {
+                    var subcategorySelect = $('#subcategory');
+                    subcategorySelect.empty(); // Clear existing options
+                    if (response.subcategories.length > 0) {
+                        response.subcategories.forEach(function (subcategory) {
+                            subcategorySelect.append($('<option>').text(subcategory).val(subcategory));
+                        });
+                        $('#subcategorylabel').show();
+                        $('#subcategory').show();
+                    } else {
+                        $('#subcategory').hide();
+                        $('#subcategorylabel').hide();
+                    }
+                },
+                error: function (error) {
+                    console.error("Error fetching subcategories:", error);
+                }
+            });
+        });
+
+        // Display selected images and add a close button to remove them
+// Display selected images and add a close button to remove them
+$('#imageInput').on('change', function (e) {
+    var selectedFiles = e.target.files;
+    var selectedImagesContainer = $('#selectedImages');
+    selectedImagesContainer.empty(); // Clear existing images
+    for (var i = 0; i < selectedFiles.length; i++) {
+        var file = selectedFiles[i];
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var imageSrc = event.target.result;
+            var imageElement = $('<img>').attr('src', imageSrc).addClass('selected-image');
+            var closeButton = $('<button>').text('x').addClass('remove-image');
+            var imageContainer = $('<div>').addClass('image-container').append(imageElement).append(closeButton);
+            // Store the file index as a data attribute
+            imageContainer.attr('data-file-index', i);
+            selectedImagesContainer.append(imageContainer);
+
+            // Remove image when close button is clicked
+         closeButton.on('click', function () {
+    var fileIndexToRemove = $(this).parent().data('file-index');
+    $(this).parent().remove();
+
+    // Remove the corresponding file from FormData
+    var formData = new FormData(document.getElementById('product-form'));
+    formData.delete('images[' + fileIndexToRemove + ']');
+
+    // Remove the corresponding file from the input field
+    var input = $('#imageInput')[0];
+    input.files = Array.from(input.files).filter((_, index) => index !== fileIndexToRemove);
+});
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+    });
+
+    //submitting data
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const form = document.getElementById('product-form');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                const formData = new FormData(form);
+
+                const res = await fetch("/admin/add-product", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const data = await res.json();
+                console.log("data:",data);
+
+                if (data.error) {
+                    document.querySelector('.name.error').textContent = data.error.Name || '';
+                    document.querySelector('.category.error').textContent = data.error.Category || '';
+                    document.querySelector('.sub.error').textContent = data.error.subcategory || '';
+                    document.querySelector('.quantity.error').textContent = data.error.quantity || '';
+                    document.querySelector('.price.error').textContent = data.error.price || '';
+                    document.querySelector('.description.error').textContent = data.error.Description || '';
+                    document.querySelector('.image.error').textContent = data.error.image || '';
+                }
+
+                if (data.message) {
+                    location.href="/admin/view-product?page=1"
+                    console.log("Product added successfully!");
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    });
+</script>

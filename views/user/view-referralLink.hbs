@@ -1,0 +1,71 @@
+<!-- HTML -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referral Link Page</title>
+  <style>
+
+    #referralLinkContainer {
+      background-color: #fff;
+      border-radius: 8px;
+      margin-top: 100px;
+      margin-left: 250px;
+      margin-right: 250px;
+      margin-bottom: 100px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 350px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div id="referralLinkContainer">
+  <h2 class="text-center" style="color: palevioletred;">Invite & Earn</h2>
+  <p>Earn upto ₹250 for sharing the referral link</p>
+  <p>Your referral link:</p>
+  <input type="text" id="referralLink" readonly value="http://localhost:3000/login/signup?ref={{code}}"><br>
+  <button onclick="copyReferralLink()">Copy Link</button>
+  <div class="copy refer" style="color: green;"></div>
+</div>
+
+<script>
+  function copyReferralLink() {
+    var copyText = document.getElementById("referralLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    document.execCommand("copy");
+    document.querySelector('.copy.refer').textContent = "Copied to your clipboard" || '';
+  }
+</script>
+
+</body>
+</html>

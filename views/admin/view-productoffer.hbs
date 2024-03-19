@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Invoice</title>
+
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        .salespage @page {
+            size: A4;
+            margin: 0;
+        }
+
+        .sales-container {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .sales {
+            background: #fff;
+            color: #666666;
+            border-radius: 2px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+            padding: 20px;
+        }
+
+        .salespage h1 {
+            text-align: center;
+        }
+
+        .report-section {
+            margin-bottom: 30px;
+        }
+
+        .sales h2 {
+            margin-top: 0;
+            line-height: 1em;
+        }
+
+        .sales table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .sales table th,
+        .sales table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #pdfButton, #excelButton, .back {
+            border-radius: 20px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+        #pdfButton, #excelButton {
+            background-color: orange;
+            color: white;
+        }
+
+        .back {
+            background-color: red;
+            color: white;
+            margin-top: 10px; /* Adjust as needed */
+            text-decoration: none;
+        }
+
+        .btn.page.active {
+            background-color: #088178;
+            color: #fff;
+        }
+
+        .btn.page {
+            background-color: #fff; /* Set background color to white for non-active pages */
+            color: #28a745; /* Set text color to green */
+            border-color: #28a745; /* Set border color to green */
+        }
+        .btn.page.active {
+            background-color: #088178;
+            color: #fff;
+        }
+
+        .btn.page {
+            background-color: #fff; /* Set background color to white for non-active pages */
+            color: #28a745; /* Set text color to green */
+            border-color: #28a745; /* Set border color to green */
+        }
+    
+    </style>
+</head>
+<body>
+
+<div class="salespage">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <center>
+                    <div class="d-flex justify-content-center">
+                        <a href="/admin/view-productOffer" class="btn btn-success mx-2 not_active"
+                           style=" background-color:#088178">Product Offer</a>
+                        <a href="/admin/view-offerModule" class="btn btn-success mx-2 not_active"
+                           style="background-color:white;color:green;">Category Offer</a>
+                        <a href="/admin/view-referaloffer" class="btn btn-success mx-2 active"
+                           style="background-color:white;color:green;">Refferal Offer</a>
+                    </div>
+                </center>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="container sales-container">
+        <div class="content-header">
+            <div class="text-center">
+                <h2 class="content-title card-title">Offers</h2>
+            </div>
+            <div style="margin-bottom: 1cm;" class="text-right">
+                <a href="/admin/add-productOffer" class="btn btn-primary btn-sm rounded">Create new</a>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <header class="card-header">
+                <div class="row gx-3 d-flex justify-content-between">
+                    <div class="col-lg-4 col-md-6 d-flex align-items-center">
+                        <form method="GET" action="{% url 'coupon_list' %}">
+                        </form>
+                    </div>
+                </div>
+            </header>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Offer Name</th>
+                            <th>Including Products</th>
+                            <th>Discount Type</th>
+                            <th>Discount Amount</th>
+                            <th>Valid From</th>
+                            <th>Valid To</th>
+                            <th scope="col" class="">Action</th>
+                            <th scope="col" class="">Edit</th>
+                            <th scope="col" class="">View</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0" id="tableBody">
+                        {{#each offers}}
+                        <tr>
+                            <td>{{this.offer_name}}</td>
+                        <td>
+                            {{#each this.productId}}
+                            <div>{{this}}</div>
+                            {{/each}}
+                        </td>
+                            <td>{{this.typeoffer}}</td>
+                            <td>{{this.discount}}</td>
+                            <td>{{this.valid_from}}</td>
+                            <td>{{this.valid_to}}</td>
+                        <td>
+                            {{#if this.unlist}}
+                                <a href="#" class="btn btn-danger" onclick="showDeleteConfirmation('{{this._id}}', '{{this.offer_name}}')">Unlist</a>
+                            {{else}}
+                                <a href="#" class="btn btn-success" onclick="showunblockConfirmation('{{this._id}}', '{{this.offer_name}}')">List</a>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <a href="/admin/edit-productcategoryoffer/{{this._id}}" class="btn btn-primary">Edit</a><br><br><br>
+
+                        </td>
+                        <td>
+                            <a href="/admin/view-productcategoryoffer/{{this._id}}" class="btn btn-info">View</a> <!-- View button -->
+                        </td>
+                         </tr>
+                        {{/each}}
+                        </tbody>
+                    
+                    </table>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+function populateTable(offers) {
+    var tableBody = $('#tableBody');
+    tableBody.empty(); // Clear existing data
+    offers.forEach(function(offer) {
+        console.log("offer:",offer)
+        var row = '<tr>' +
+            '<td>' + offer.offer_name + '</td>' +
+            '<td>' + offer.category + '</td>' +
+            '<td>' + offer.typeoffer + '</td>' +
+            '<td>' + offer.discount + '</td>' +
+            '<td>' + offer.valid_from + '</td>' +
+            '<td>' + offer.valid_to + '</td>' +
+            '<td>' +
+            (offer.unlist ? '<a href="#" class="btn btn-danger" onclick="showDeleteConfirmation(\'' + offer._id + '\', \'' + offer.offer_name + '\')">Unlist</a>' :
+                '<a href="#" class="btn btn-success" onclick="showunblockConfirmation(\'' + offer._id + '\', \'' + offer.offer_name + '\')">List</a>') +
+            '</td>' +
+            '<td>' +
+            '<a href="/admin/edit-productcategoryoffer/' + offer._id + '" class="btn btn-primary">Edit</a>' +
+            '</td>' +
+            '<td>' +
+            '<a href="/admin/view-productcategoryoffer/' + offer._id + '" class="btn btn-info">View</a>' +
+            '</td>' +
+            '</tr>';
+        tableBody.append(row);
+    });
+}
+
+
+    $(document).ready(function() {
+        $('#offerTable').DataTable({
+            "scrollX": true, 
+            "paging": true, 
+            "pageLength": 5, // Number of rows per page
+            // Customize the appearance of pagination buttons
+            "language": {
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": "&#8594;", // Right arrow
+                    "previous": "&#8592;" // Left arrow
+                }
+            }
+        });
+    });
+
+
+    {{!-- block --}}
+    function showDeleteConfirmation(offerId, offerName) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Block <strong id="productNameToDelete">${offerName}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('${offerId}')">Block</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox(){
+            $('#deleteConfirmationModal').modal('hide');
+    }
+    function confirmDelete(offerId) {
+        // Handle the delete operation here
+        console.log('Deleting user with ID:', offerId);
+
+        // Make a GET request to delete the product
+        fetch(`/admin/unlistproductoffer/${offerId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log('Product deleted successfully:',data.details);
+                populateTable(data.details);
+
+            } else {
+                console.error('Error deleting product:', data.error);
+                // Handle the error
+            }
+
+            // Close the modal
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+    
+{{!-- unbock --}}
+
+        function showunblockConfirmation(offerId, offerName) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="unblockConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cancelunblockBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to UnBlock <strong id="productNameToDelete">${offerName}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cancelunblockBox()">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="confirmunblock('${offerId}')">unBlock</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#unblockConfirmationModal').modal('show');
+    }
+
+    function cancelunblockBox(){
+            $('#unblockConfirmationModal').modal('hide');
+    }
+    function confirmunblock(offerId) {
+        // Handle the delete operation here
+        console.log('Deleting user with ID:', offerId);
+
+        // Make a GET request to delete the product
+        fetch(`/admin/unlistproductoffer/${offerId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+
+                console.log('Product deleted successfully');
+                populateTable(data.details);
+
+            } else {
+                console.error('Error deleting product:', data.error);
+            }
+            $('#unblockConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+
+    <style>
+        #myTable-wrapper {
+            margin-top: 40px; 
+            padding-top: 50px;
+        }
+    </style>
+    
+<section>
+    <div class="container">
+
+        <div class="table-responsive">
+        <table class="table mt-4" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 15%">Reference Id</th>
+                                        <th scope="col" style="width: 15%">Name</th>
+                    <th scope="col" style="width: 15%">Payment Option</th>
+                    <th scope="col" style="width: 15%">Price</th>
+                    <th scope="col" style="width: 15%">ordered Date</th>
+                    <th scope="col" style="width: 15%">Reason</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.referenceNo}}</td>
+                    <td>{{this.productDetails.[0].Name}}</td>
+                    <td>{{this.paymentMethod}}</td>
+                    <td>{{this.productDetails.[0].price}}</td>
+                    <td>{{this.formattedDate}}</td>
+                     <td>{{this.reason}}</td>
+
+                {{/each}}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+
+<script>
+    function showDeleteConfirmation(userId, userName, productId) {
+        var modalHtml = `
+            <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete <strong id="productNameToDelete">${userName}</strong>?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('${userId}', '${userName}', '${productId}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox(){
+            $('#deleteConfirmationModal').modal('hide');
+    }
+
+    function confirmDelete(userId, userName, productId) {
+        // Make a GET request to delete the product
+        fetch(`/admin/delete-ordered-product/${userId}/${productId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log('Product deleted successfully');
+                location.reload("/admin/view-order")
+            } else {
+                console.error('Error deleting product:', data.error);
+                // Handle the error
+            }
+
+            // Close the modal
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+
+
+    function submitStatusForm(orderId) {
+         var selectedStatus= $('#statusSelect' + orderId + ' option:selected').text();
+         console.log(orderId)
+    // Make an AJAX request to update the status
+    $.ajax({
+        url: '/admin/update-order-status/' + orderId,
+    type: 'POST',
+    data: JSON.stringify({ status: selectedStatus }), // Convert to JSON string
+    contentType: 'application/json', 
+
+        success: function (data) {
+            console.log(data)
+            if (data.status) {
+                console.log('Status updated successfully');
+                   showSuccessModal('Status Updated', 'The status has been successfully updated.');
+            } else {
+                console.error('Error updating status:', data.error);
+                // Handle the error
+            }
+        },
+        error: function (error) {
+            console.error('Error making AJAX request:', error);
+            // Handle the error
+        }
+    });
+}
+
+    function showSuccessModal(title, message) {
+        var modalHtml = `
+            <div class="modal" tabindex="-1" role="dialog" id="successModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">${title}</h5>
+                            <button type="button" class="close" data-dismiss="modal" onclick="cancelsuccessBox()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            ${message}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="cancelsuccessBox()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#successModal').modal('show');
+
+        // Remove the modal from the DOM after it's closed
+        $('#successModal').on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+    }
+
+        function cancelsuccessBox(){
+            $('#successModal').modal('hide');
+    }
+</script>

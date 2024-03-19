@@ -1,0 +1,238 @@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js" integrity="sha512-HL3RQK1Vz3+aD7bEHJ9mFY6uxlir0LVItHMmtiCkgvZN0j3jra91heBSa73lgJG9N3RZiyi6GZLDDYVe9fjs+A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script  src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <style>
+        @media (min-width: 1025px) {
+            .h-custom {
+                height: 100vh !important;
+            }
+        }
+
+        .product-row {
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 0;
+        }
+
+        .product-image {
+            width: 120px;
+            margin-right: 20px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-input {
+            text-align: center;
+            padding-left:15px;
+            padding-right:15px;
+        }
+
+        .quantity-controls button {
+            background-color: #edebee; /* Change the background color */
+            color: #000000; /* Change the text color */
+            border: none; /* Remove the border */
+            margin: 0; /* Remove default margins */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .quantity-controls button:hover {
+            background-color: #c2c7cc; /* Change background color on hover */
+        }
+    </style>
+</head>
+<body>
+
+<section class="h-100 h-custom" style="margin-bottom: 20px;">
+    <div class="container h-100 py-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="h5">Image</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Sizes</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Unit Price</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each products}}
+                        <tr class="product-row">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="data:{{this.product.images.[0].contentType}};base64,{{this.product.images.[0].imageBase64}}" class="img-fluid rounded-3 product-image" alt="">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex-column ms-4">
+                                    <p class="mb-2" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">{{this.product.Name}}</p>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                {{#each this.product.sizes}}
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input product-size" type="checkbox" id="size{{@index}}" value="{{this}}">
+                                    <label class="form-check-label" for="size{{@index}}">{{this}}</label>
+                                </div>
+                                {{/each}}
+                            </td>
+                            <td class="align-middle">
+                                <div class="quantity-controls">
+                                    <button class="cart-item-count mr-3" data-proid="{{this.product._id}}" data-action="decrement" onclick="changeQuantity('{{this._id}}', '{{this.product._id}}','{{this.product.price}}', -1, 'decrement', {{this.product.quantity}})">-</button>
+                                    <span id="quantity-{{this.product._id}}" class="quantity-input">{{this.quantity}}</span>
+                                    <button class="cart-item-count mr-3" data-proid="{{this.product._id}}" data-action="increment" onclick="changeQuantity('{{this._id}}', '{{this.product._id}}','{{this.product.price}}', 1, 'increment', {{this.product.quantity}})">+</button>
+                                </div>
+                            </td>
+                            <td class="align-middle">
+                                <p class="mb-0"  style="font-weight: 500;">{{this.product.price}}</p>
+                            </td>
+                            <td class="align-middle">
+                                <p class="mb-0" id="proprice-{{this.product._id}}" style="font-weight: 500;">{{this.subtotal}}</p>
+                            </td>
+                            <td class="align-middle">
+                                <a href="#" class="btn btn-danger remove-cart-item"  onclick="showDeleteConfirmation('{{this._id}}', '{{this.product._id}}')">Remove</a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card shadow-2-strong mb-5 mb-lg-0" style="border-radius: 16px; margin-bottom: 100px; height: 150px;">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <div class="d-flex " style="font-weight: 700; font-size: larger;  padding-left: 700px;">
+                                <p class="mb-2">Total (tax included)</p>
+                                <p class="mb-2"><span id="total" style="padding-left: 25px;">{{total}}</span></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 " style="padding-left: 800px; margin-top: 10px;">
+                                <button type="button" class="btn btn-lg" style="background-color: #E96E6E; color: white;">
+                                    <a href="/user/place-order" style="text-decoration: none; color: white;">Place Order</a>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+function changeQuantity(cartId, proId, proPrice, count, action, maxQuantity) {
+    console.log('Button clicked. cartId:', cartId, 'proId:', proId, 'count:', count);
+
+    $.ajax({
+        url: '/user/change-product-quantity',
+        data: {
+            cart: cartId,
+            product: proId,
+            count: count,
+            price: proPrice
+        },
+        method: 'post',
+        success: (response) => {
+            console.log("respone:", response);
+            const updatedQuantity = response;
+            const selectedElement = $(`#quantity-${proId}`);
+            $(`#quantity-${proId}`).text(updatedQuantity.quantity);
+            $(`#proprice-${proId}`).text(updatedQuantity.subtotal);
+            console.log("updated total", updatedQuantity.total);
+            // Update the total value
+            $('#total').text(updatedQuantity.total);
+
+            const decrementButton = $(`button[data-proid="${proId}"][data-action="decrement"]`);
+            decrementButton.prop('disabled', updatedQuantity.quantity === 1);
+
+            const incrementButton = $(`button[data-proid="${proId}"][data-action="increment"]`);
+
+            // Disable the increment button if quantity reaches the maximum
+            if (updatedQuantity.quantity >= maxQuantity) {
+                incrementButton.prop('disabled', true);
+            } else {
+                incrementButton.prop('disabled', false);
+            }
+        },
+        error: (error) => {
+            console.error('Error updating quantity:', error);
+        }
+    });
+}
+
+function showDeleteConfirmation(cartId, productId) {
+    var modalHtml = `
+        <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete('${cartId}','${productId}')">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Append the modal HTML to the body
+    $('body').append(modalHtml);
+
+    // Show the modal
+    $('#deleteConfirmationModal').modal('show');
+}
+
+function canceldeleteBox() {
+    $('#deleteConfirmationModal').modal('hide');
+}
+
+function confirmDelete(cartId, proId) {
+    // Handle the delete operation here
+
+    // Call the removeCartItem function
+    removeCartItem(cartId, proId);
+}
+
+// Function to remove a cart item
+function removeCartItem(cartId, proId) {
+    $.ajax({
+        url: '/user/remove-cart-item',
+        data: {
+            cart: cartId,
+            product: proId
+        },
+        method: 'post',
+        success: (response) => {
+            // Handle success, you might want to update the UI or redirect
+            console.log('Item removed successfully');
+            if (response.isProductEmpty) {
+                location.reload("/user/cart-details-empty");
+            } else {
+                location.reload("/user/cartDetails");
+            }
+        },
+        error: (error) => {
+            console.error('Error removing item:', error);
+        }
+    });
+}
+</script>

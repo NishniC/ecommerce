@@ -1,0 +1,195 @@
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+
+<!------ Include the above in your HEAD tag ---------->
+<style>
+    .sub-menu {
+    display: none;
+}
+
+/* Hide the search section */
+#searchForm {
+    display: none;
+}
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <address>
+                        <strong>{{address.name}}</strong>
+                        <br>
+                        {{address.house}}
+                        <br>
+                        {{address.city}}, {{address.state}}
+                        <br>
+                        {{address.postcode}}
+                    </address>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 text-right">
+                    <p>
+                        <em>Date: {{order.date}}</em>
+                    </p>
+                    <p>
+                        <em>Receipt #: {{order.id}}</em>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="text-center">
+                    <h1>Receipt</h1>
+                </div>
+                </span>
+                <table class="table table-hover">
+                    <thead>
+                       <tr>
+        							<td><strong>Item</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                {{#each products}}
+    							<tr>
+    								<td>{{this.name}}</td>
+    								<td class="text-center">₹{{this.price}}</td>
+    								<td class="text-center">{{this.quantity}}</td>
+    								<td class="text-right">₹{{this.totalProductPrice}}</td>
+    							</tr>
+                                {{/each}}
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td class="text-right">
+                            <p>
+                                <strong>Subtotal: </strong>
+                            </p>
+                            <p>
+                                <strong>Discount: </strong>
+                            </p>
+                            <p>
+                                <strong>shipping: </strong>
+                            </p></td>
+                            <td class="text-center">
+                            <p>
+                                <strong>₹{{order.subTotal}}</strong>
+                            </p>
+                            <p>
+                                <strong>₹{{order.discount}}</strong>
+                            </p>
+                            <p>
+                                {{#if order.shipping}}
+                                <strong>₹{{order.shipping}}</strong>
+                                {{else}}
+                                <strong>₹0</strong>
+                                {{/if}}
+                            </p></td>
+                        </tr>
+                        <tr>
+                            <td>   </td>
+                            <td>   </td>
+                            <td class="text-right"><h4><strong>Total: </strong></h4></td>
+                            <td class="text-center text-danger"><h4><strong>₹{{order.total}}</strong></h4></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="continuebtn" style="width: 100%; margin-top: 10px; padding: 10px; border: none; border-radius: 30px; background: #52ad9c; color: #fff; font-size: 15px; font-weight: bold;" onmouseover="this.style.background='#428a7d'" onmouseout="this.style.background='#52ad9c'">Continue Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+        document.getElementById('continuebtn').addEventListener('click', function() {
+  // Send an AJAX request to validate the coupon
+           $.ajax({
+          url: "/user/continue-payment/"+{{order.id}},
+          method: 'get',
+         
+          success: function (response) {
+            console.log("response", response);
+
+            if (response.codsuccess) {
+              location.href = "/user/ordersuccess?orderId=" + response.response._id;
+            } else if (response.response.errors) {
+              console.log("error message", response.response.errors);
+              document.querySelector('.payment.error').textContent = response.response.errors.paymentMethod || '';
+            }else{
+              console.log("response is:",response)
+                razorpayment(response);
+            }
+          },
+          error: function (error) {
+            console.log("error", error);
+          }
+        });
+
+});
+
+
+  function razorpayment(order){
+    console.log("order is:",order)
+        console.log("amount is:",order.response.amount)
+
+    var amountInPaise = order.response.amount * 100;
+    console.log(amountInPaise)
+    var options = {
+    "key": "rzp_test_RL5JDiKZOe7ZgJ", // Enter the Key ID generated from the Dashboard
+    "amount":order.response.amount , // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Style Savy",
+    "description": "Test Transaction",
+    "order_id": order.response.id,
+    "handler": function (response){     
+        verifyPayment(response,order)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000",
+        
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+    rzp1.open();
+
+
+  }
+
+
+  function verifyPayment(payment,order){
+    $.ajax({
+      url:"/user/verify-payment",
+      data:{
+        payment,order
+      },
+      method:'post',
+      success:(response)=>{
+          console.log("success response",response)
+        if(response.status){
+        location.href = "/user/ordersuccessid?orderId=" + response.details.order.response.receipt;
+        }else{
+        location.href = "/user/orderfailed?orderId=" + response.details.order.response.receipt;
+        }
+      }
+    })
+  }
+ 
+</script>      

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Signup</title>
+    <!-- Add your CSS links or styles here -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <link rel="stylesheet"
+          href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet"
+          href=
+"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity=
+"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+          <style>
+            .input-group-text {
+    background-color: transparent; /* Transparent background */
+    border-color: #b382f5; /* Border color */
+    color: #495057; /* Icon color */
+    cursor: pointer; /* Show pointer cursor */
+}
+
+.input-group-text:hover {
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+
+.form-control {
+    padding-left: 2.375rem !important; /* Adjust left padding to accommodate the icon */
+}
+          </style>
+</head>
+<body>
+    <section class="h-100" style="background-color: #f6f3f9;">
+        <div class="container py-5 h-100">
+            <div class="card card-registration">
+                <div class="card-body p-md-5 text-black">
+                    <h3 class="mb-5 text-uppercase" style="color: #b382f5;  text-align: center;" >Signup</h3>
+
+                    <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <img src="/images/signup1.avif" alt="Image" class="img-fluid" >
+                            </div>
+                            <div style="padding-left: 8.5rem; padding-top: 0.5cm;">
+                                <p style="color: green;">Password Instructions:</p>
+    <small style="font-size: 80%; color: #6c757d;">(must be at least 8 characters long and should contain one letter, one number, and one special character)</small>
+</div>                               
+                            </div>
+                        <div class="col-md-6">
+                            <form id="signup-form" action="signup" method="POST" enctype="multipart/form-data" >
+                                
+                                            <input id="referalLink" name="referalLink" value="{{referralLink}}" hidden/>
+                                       <div class="form-outline mb-4 form-inline">
+                                            <label class="mr-5" style="font-size: large; font-weight: 500; ">First Name:</label>
+                                            <input type="text" id="formFirstName" name="firstName" class="form-control form-control-lg" placeholder="First name" style="border-color: #b382f5; width: 7cm;" />
+                                            <div class="firstName error" style="color: red;"></div>
+                                        </div>
+                                  
+                                        <div class="form-outline mb-4 form-inline">
+                                            <label class="mr-5" style="font-size: large; font-weight: 500; ">Last Name:</label>
+                                            <input type="text" id="formLastName" name="lastName" class="form-control form-control-lg" placeholder="Last name" style="border-color: #b382f5;  width: 7cm;" />
+                                            <div class="lastName error" style="color: red;"></div>
+                                        </div>
+                                 
+                              
+                                
+                                <div class="form-outline mb-4 form-inline">
+                                            <label class="mr-5" style="font-size: large; font-weight: 500; padding-left: 1.1cm;"> Email:</label>
+                                    <input type="text" id="formEmail" name="email" class="form-control form-control-lg" placeholder="Email ID" style="border-color: #b382f5;  width: 7cm;" />
+                                    <div class="email error" style="color: red;"></div>
+                                </div> 
+ 
+<div class="form-outline mb-4 form-inline">
+    <label class="mr-5" style="font-size: large; font-weight: 500; padding-left: 0.27cm;">Password:</label>
+    <input type="password" id="formPassword" name="password" class="form-control form-control-lg" placeholder="Password" style="border-color: #b382f5; width: 6cm; border-right: none; border-top-right-radius: 0cm; border-bottom-right-radius: 0cm;">
+    <div class="input-group-append">
+        <span class="input-group-text" id="togglePassword" style="height: 1.27cm; border-left: none;border-top-left-radius: 0cm; border-bottom-left-radius: 0cm;"><i class="bi bi-eye-slash"></i></span>
+    </div>
+        <div class="password error" style="color: red;"></div>
+</div>
+
+                                <div class="form-outline mb-4 form-inline">
+                                            <label class="mr-5" style="font-size: large; font-weight: 500; padding-left: 0.45cm; ">Confirm:</label>
+                                    <input type="password" id="formConfirmPassword" name="confirmpassword" class="form-control form-control-lg" placeholder="Confirm Password" style="border-color: #b382f5; width: 7cm;" />
+                                    <div class="confirmpassword error" style="color: red;"></div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-end pt-3 justify-content-center align-items-center">
+                                    <button type="submit" class="btn btn-lg ms-2" style="background-color: #b382f5; ">Sign Up</button>
+                                </div>
+                            </form>
+                            <p class="mt-3">
+                                Already have an account? <a href="/">Login</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('formPassword');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const form = document.getElementById('signup-form');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        try {
+            const formData = new FormData(form);
+
+            // Convert form data to JSON
+            const formDataObject = {};
+            formData.forEach((value, key) => {
+                formDataObject[key] = value;
+            });
+
+            // Log the formDataObject to the console
+            console.log(formDataObject);
+
+            // Stringify the JSON object and set it as a header
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            };
+
+            const res = await fetch("/signup", {
+                method: "POST",
+                body: JSON.stringify(formDataObject),
+                headers: headers,
+            });
+
+            const data = await res.json();
+            console.log(data)
+
+            if (data.errors) {
+                // Display error messages
+                // Update the UI with error information
+                document.querySelector('.firstName.error').textContent = data.errors.firstName || '';
+                document.querySelector('.lastName.error').textContent = data.errors.lastName || '';
+                document.querySelector('.email.error').textContent = data.errors.email || '';
+                document.querySelector('.password.error').textContent = data.errors.password || '';
+                document.querySelector('.confirmpassword.error').textContent = data.errors.confirmpassword || '';
+            }
+
+            if (data.newUser) {
+                // Redirect to the OTP verification page
+                location.assign('/otp-page');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    });
+});
+
+</script>
+
+
+    <!-- Bootstrap JS and other scripts if needed -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

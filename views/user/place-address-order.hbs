@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Order Form</title>
+   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700');
+
+    body {
+      background: url('http://all4desktop.com/data_images/original/4236532-background-images.jpg');
+      font-family: 'Roboto Condensed', sans-serif;
+      color: #262626;
+    }
+
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1140px;
+      }
+    }
+
+    .d-flex {
+      display: flex;
+      flex-direction: row;
+      background: #f6f6f6;
+      border-radius: 0 0 5px 5px;
+      padding: 25px;
+    }
+
+    .address-section {
+      flex: 1;
+      padding-right: 15px; /* Add padding to create space between sections */
+    }
+
+    .order-section {
+      flex: 1;
+      padding-left: 15px; /* Add padding to create space between sections */
+    }
+
+    h2 {
+      margin: 0;
+      padding-left: 15px;
+    }
+
+    .required {
+      color: red;
+    }
+
+    label,
+    table {
+      display: block;
+      margin: 15px;
+    }
+
+    label>span {
+      float: left;
+      width: 25%;
+      margin-top: 12px;
+      padding-right: 10px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select {
+      width: 70%;
+      height: 30px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      border: 1px solid #dadada;
+      color: #888;
+    }
+
+    select {
+      width: 72%;
+      height: 45px;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+    }
+
+    .Yorder {
+      margin-top: 15px;
+      height: 600px;
+      padding: 20px;
+      border: 1px solid #dadada;
+    }
+
+    table {
+      margin: 0;
+      padding: 0;
+    }
+
+    th {
+      border-bottom: 1px solid #dadada;
+      padding: 10px 0;
+    }
+
+    tr>td:nth-child(1) {
+      text-align: left;
+      color: #2d2d2a;
+    }
+
+    tr>td:nth-child(2) {
+      text-align: right;
+      color: #52ad9c;
+    }
+
+    td {
+      border-bottom: 1px solid #dadada;
+      padding: 25px 25px 25px 0;
+    }
+
+    p {
+      display: block;
+      color: #888;
+      margin: 0;
+      padding-left: 25px;
+    }
+
+    .Yorder>div {
+      padding: 15px 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">
+    <h2>Product Order Form</h2>
+  </div>
+  <div class="d-flex">
+    <div class="address-section">
+      <form action="" method="" id="checkout-form">
+        <!-- Address details go here -->
+        <label>
+          <span class="fname"> Name <span class="required">*</span></span>
+          <input type="text" name="fname">
+          <div class="Name error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span class="housename">House Name <span class="required">*</span></span>
+          <input type="text" name="housename">
+          <div class="Housename error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Town / City <span class="required">*</span></span>
+          <input type="text" name="city">
+           <div class="city error" style="color: red;"></div>
+         
+        </label>
+        <label>
+          <span>State / County <span class="required">*</span></span>
+          <input type="text" name="state">
+          <div class="country error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Postcode / ZIP <span class="required">*</span></span>
+          <input type="text" name="postcode">
+          <div class="zipcode error" style="color: red;"></div>
+
+        </label>
+        <label>
+          <span>Phone <span class="required">*</span></span>
+          <input type="tel" name="phone">
+          <div class="phone error" style="color: red;"></div>
+        
+        </label>
+        <label>
+          <span>Email Address <span class="required">*</span></span>
+          <input type="email" name="email">
+          <div class="email error" style="color: red;"></div>
+
+        </label>
+    </div>
+        <input type="hidden" id="coupon-applicable" name="coupon-applicable" value="false">
+        <input type="hidden" id="applied-coupon" name="applied-coupon" value="">
+
+        <div class="order-section">
+          <div class="Yorder">
+            <table>
+              <tr>
+                <th colspan="2">Your order</th>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td id="total">{{amount}}</td>
+              </tr>
+              <tr id="discountbox" hidden>
+                <td>Discount</td>
+                <td id="discount-amount" style="color: red;"></td>
+              </tr>
+              <tr>
+                <td>Shipping</td>
+                {{#if shippingCharge}}
+                <td>₹50</td>
+                {{else}}
+                <td>Free shipping</td>
+                {{/if}}
+              </tr>
+              <hr>
+              <tr>
+                <td style="font-size: medium; font-weight: bold;">Grand Total</td>
+                <td style="font-size: medium; font-weight: bold;" id="totalamount">{{total}}</td>
+              </tr>
+            </table>
+
+            <div id="paymentbox">
+              <p style="font-size: medium; font-weight: bold;">Payment:</p>
+              {{#if COD}}           
+              <div>
+                <input type="radio" id="payment-method"  name="payment-method" value="COD"> Cash on Delivery
+              </div>
+              <div>
+                <input type="radio" id="payment-method" name="payment-method" value="ONLINE"> online payment
+                <span>
+                  <img src="https://www.logolynx.com/images/logolynx/c3/c36093ca9fb6c250f74d319550acac4d.jpeg" alt="" width="50">
+                </span>
+              </div>
+              {{else}}
+               <input type="radio" id="payment-method" name="payment-method" value="ONLINE"> online payment
+              <h6 style="color: blue;"> Cash on Delivery (COD) option is not available for orders exceeding Rs 1000.</h6>
+              {{/if}}
+              <div  class="payment error" style="color: red;"></div>
+            </div>
+
+            <div class="coupon-section">
+              <input type="text" id="coupon-code" placeholder="Enter coupon code">
+              <button id="apply-coupon-btn" type="button" style="border: none; color: green;">Apply Coupon</button>
+              <button id="remove-coupon-btn" type="button" style="border: none; color: red; display: none;">Remove Coupon</button>
+              <div class="coupon error" style="color: red;"></div>
+            </div>
+
+            <button type="submit" style="width: 100%; margin-top: 10px; padding: 10px; border: none; border-radius: 30px; background: #52ad9c; color: #fff; font-size: 15px; font-weight: bold;" onmouseover="this.style.background='#428a7d'" onmouseout="this.style.background='#52ad9c'">{{#if COD}}Place Order{{else}}Payment{{/if}}</button>
+          </div>
+        </div>
+
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+    $("#checkout-form").submit((e)=>{
+        e.preventDefault()
+        $("#checkout-form button[type='submit']").prop("disabled", true);
+        $.ajax({
+            url:"/user/place-order",
+            method:'post',
+            data:$('#checkout-form').serialize(),
+            success:(response)=>{
+              console.log("respnse",response)
+              console.log("response error",response.response.errors)
+
+                if (response.codsuccess) {
+                  console.log("response cod",response)
+              location.href = "/user/ordersuccess?orderId=" + response.response._id;
+            } else if (response.response.errors) {
+              console.log("error message", response.response.errors);
+            console.log("error message",response.response.errors.paymentMethod)
+                // Update the error messages using the correct structure
+                document.querySelector('.Name.error').textContent =response.response.errors.address.firstName || '';
+                document.querySelector('.Housename.error').textContent = response.response.errors.address.houseName || '';
+                document.querySelector('.city.error').textContent = response.response.errors.address.townCity || '';
+                document.querySelector('.country.error').textContent = response.response.errors.address.stateCounty || '';
+                document.querySelector('.zipcode.error').textContent = response.response.errors.address.postcodeZIP || '';
+                document.querySelector('.phone.error').textContent = response.response.errors.address.phone || '';
+                document.querySelector('.email.error').textContent = response.response.errors.address.email || '';
+                document.querySelector('.payment.error').textContent = response.response.errors.paymentMethod || '';
+            }else{
+              console.log("response is:",response)
+                razorpayment(response);
+            }
+               
+                
+                 $("#checkout-form button[type='submit']").prop("disabled", false);
+            }
+            
+
+            })
+    })
+
+     function razorpayment(order){
+      
+    var amountInPaise = order.response.amount * 100;
+    console.log(amountInPaise)
+    var options = {
+    "key": "rzp_test_RL5JDiKZOe7ZgJ", // Enter the Key ID generated from the Dashboard
+    "amount":order.response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Style Savy",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": order.response.id,
+    "handler": function (response){     
+
+        verifyPayment(response,order)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+    rzp1.open();
+
+
+  } // Close razorpayment function
+
+  function verifyPayment(payment,order){
+    $.ajax({
+      url:"/user/verify-payment",
+      data:{
+        payment,order
+      },
+      method:'post',
+        success:(response)=>{
+          console.log("success response",response)
+        if(response.status){
+        location.href = "/user/ordersuccessid?orderId=" + response.details.order.response.receipt;
+        }else{
+         location.href = "/user/orderfailed?orderId=" + response.details.order.response.receipt;
+
+        }
+      }
+    })
+  }
+
+
+   {{!-- apply coupon --}}
+
+function applyDiscount(discount) {
+  // Apply the discount to the order total
+  console.log("insside")
+  var currentTotal = parseFloat(document.getElementById('total').innerText);
+  var discountedTotal = currentTotal - discount;
+  console.log("amount",discountedTotal)
+    document.getElementById('discountbox').removeAttribute('hidden');
+  document.getElementById('discount-amount').innerText = discount.toFixed(2);
+  document.getElementById('total').innerText = discountedTotal.toFixed(2); // Update the displayed total
+
+    document.getElementById('apply-coupon-btn').style.display = 'none';
+document.getElementById('remove-coupon-btn').style.display = 'inline-block';
+
+}
+
+  document.getElementById('apply-coupon-btn').addEventListener('click', function() {
+  // Get the entered coupon code
+  var couponCode = document.getElementById('coupon-code').value;
+
+  // Send an AJAX request to validate the coupon
+  $.ajax({
+    url: "/user/validate-coupon",
+    method: 'post',
+    data: { couponCode: couponCode },
+    success: function(response) {
+      console.log("log",response)
+        if(response.response.matchedOffer){
+                console.log("log",response)
+
+        var discount = response.response.matchedOffer.discount;
+        console.log("dis:",discount)
+        applyDiscount(discount);
+        }
+        else{
+                console.log("logfg",response)
+
+          document.querySelector('.coupon.error').textContent =response.response.errors|| '';
+
+        }
+     
+    },
+    error: function(error) {
+      console.log("Error validating coupon:", error);
+    }
+  });
+});
+
+// Event listener for the Remove Coupon button
+document.getElementById('remove-coupon-btn').addEventListener('click', function() {
+  // Call the function to remove the discount
+    var couponCode = document.getElementById('coupon-code').value;
+ $.ajax({
+    url: "/user/remove-coupon", // Replace with your backend endpoint for removing coupon
+    method: 'post',
+        data: { couponCode: couponCode },
+    success: function(response) {
+      // Update the UI after removing the coupon
+      var currentTotal = parseFloat(document.getElementById('total').innerText);
+      var updatedTotal = currentTotal + parseFloat(document.getElementById('discount-amount').innerText);
+      document.getElementById('total').innerText = updatedTotal.toFixed(2);
+      
+      // Hide the discount box and remove coupon button
+      document.getElementById('discountbox').setAttribute('hidden', true);
+      document.getElementById('remove-coupon-btn').style.display = 'none';
+      
+      // Show the Apply Coupon button
+      document.getElementById('apply-coupon-btn').style.display = 'inline-block';
+      
+      // Clear the coupon code input field if needed
+      document.getElementById('coupon-code').value = '';
+    },
+    error: function(error) {
+      console.log("Error removing coupon:", error);
+    }
+  });
+});
+
+</script>
+

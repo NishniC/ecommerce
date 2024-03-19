@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+
+
+  <main id="main" class="main">
+
+    
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-8">
+          <div class="row">
+
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card sales-card">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item sales-dropdown" href="#" data-filter="Today">Today</a>
+                          <a class="dropdown-item sales-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item sales-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Sales <span id="time">| Today</span></h5>
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6><span id="salesNo">{{sales.today}}</span></h6>
+                      <span class="text-success small pt-1 fw-bold" id="salesPercentage">{{sales.percentage}}</span> <span class="text-muted small pt-2 ps-1" id="salesDes">{{sales.description}} than yesterday</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- End Sales Card -->
+
+            <!-- Revenue Card -->
+            <div class="col-xxl-4 col-md-6">
+              <div class="card info-card revenue-card">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item revenue-dropdown" href="#" data-filter="Today">Today</a>
+                          <a class="dropdown-item revenue-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item revenue-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Revenue <span id="revdate">| Today</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6><span id="revenue">₹{{revenue.today}}</span></h6>
+                      <span class="text-success small pt-1 fw-bold"><span id="revPercentage">{{revenue.percentage}}</span>%</span> <span class="text-muted small pt-2 ps-1" id="revenuedes">{{revenue.description}}</span>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <!-- End Revenue Card -->
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card customers-card">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item customers-dropdown" href="#" data-filter="Today">Today</a>
+                          <a class="dropdown-item customers-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item customers-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Customers <span id="customersday">| Today</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-people"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6><span id="customerNo">{{numberUsers.today}}</span></h6>
+                      <span class="text-danger small pt-1 fw-bold" id="customerPercentage">{{numberUsers.percentage}}</span> <span class="text-muted small pt-2 ps-1" id="customerdes">{{numberUsers.description}}</span>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item report-dropdown" href="#" data-filter="This Week">This Week</a>
+                          <a class="dropdown-item report-dropdown" href="#"  data-filter="Monthly">Monthly Report</a>
+                          <a class="dropdown-item report-dropdown" href="#"  data-filter="Yearly">Yearly Report</a>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                  <h5 class="card-title">Reports <span id="reportdet">|This Week</span></h5>
+
+               
+                  <div id="reportsChart"></div>
+
+                  
+          
+
+                </div>
+
+              </div>
+            </div>
+            <!-- End Reports -->
+
+            <!-- Top Selling Products-->
+            <div class="col-12">
+              <div class="card top-selling overflow-auto">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item topProduct-dropdown" href="#" data-filter="This Week">This Week</a>
+                          <a class="dropdown-item topProduct-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item topProduct-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling Product<span id="topProductday">| This Week</span></h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Preview</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Sold</th>
+                        <th scope="col">Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody id="topProductBody">
+                      {{#each topProducts}}
+                      <tr>
+                        <th scope="row"><a href="#"><img src="data:{{this.images.[0].contentType}};base64,{{this.images.[0].imageBase64}}" style="height: 40px;" /></a></th>
+
+                        <td><a href="#" class="text-primary fw-bold">{{this.productName}}</a></td>
+                        <td>₹{{this.price}}</td>
+                        <td class="fw-bold">{{this.quantitySold}}</td>
+                        <td>₹{{this.revenue}}</td>
+                      </tr>
+                      {{/each}}
+                     
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+            </div><!-- End Top Selling -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+        <!-- Right side columns -->
+        <div class="col-lg-4">
+
+          <!-- top selling brand -->
+          <div class="card">
+            <div class="card top-selling overflow-auto">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item topBrand-dropdown" href="#" data-filter="This Week">This Week</a>
+                          <a class="dropdown-item topBrand-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item topBrand-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling Brands<span id="topBrandday">| This Week</span></h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Preview</th>
+                        <th scope="col">Brand Name</th>
+                        <th scope="col">Sold</th>
+                        <th scope="col">Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody id="topBrandBody">
+                      {{#each topBrands}}
+                      <tr>
+                        <th scope="row"><a href="#"><img src="/images/brand_log/{{_id}}.jpg" /></a></th>
+
+                        <td><a href="#" class="text-primary fw-bold">{{this._id}}</a></td>
+                        <td class="fw-bold">{{this.quantitySold}}</td>
+                        <td>₹{{this.revenue}}</td>
+                      </tr>
+                      {{/each}}
+                     
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+          </div>
+          <!-- Top Selling Brand -->
+
+          <!-- Top Selling Category -->
+          <div class="card">
+            <div class="card">
+            <div class="card top-selling overflow-auto">
+
+                <div class="filter">
+                    <div class="btn-group">
+                      <button id="customDropdown" type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                    <div class="dropdown-menu" aria-labelledby="customDropdown">
+                        <span class="dropdown-menu-arrow"></span>
+                          <a class="dropdown-item topCategory-dropdown" href="#" data-filter="This Week">This Week</a>
+                          <a class="dropdown-item topCategory-dropdown" href="#"  data-filter="This Month">This Month</a>
+                          <a class="dropdown-item topCategory-dropdown" href="#"  data-filter="This Year">This Year</a>
+                    </div>
+                    </div>
+                </div>
+
+
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling Category<span id="topCategoryday">| This Week</span></h5>
+
+                  <table class="table table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Sold</th>
+                        <th scope="col">Revenue</th>
+                      </tr>
+                    </thead>
+                    <tbody id="topCategoryBody">
+                      {{#each topCategory}}
+                      <tr>
+                        <td><a href="#" class="text-primary fw-bold">{{this._id}}</a></td>
+                        <td class="fw-bold">{{this.quantitySold}}</td>
+                        <td>₹{{this.revenue}}</td>
+                      </tr>
+                      {{/each}}
+                     
+                    </tbody>
+                  </table>
+
+                </div>
+
+              </div>
+          </div>
+          </div><!-- End Top Selling Category -->
+
+          <!-- Website Traffic -->
+         <!-- End Website Traffic -->
+
+          
+        </div><!-- End Right side columns -->
+
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+
+  {{!-- sales box --}}
+
+
+  document.querySelectorAll('.sales-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/salesreport/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#time').text("| " + filter); 
+            $('#salesNo').text(salesData.data.today);
+            $('#salesPercentage').text(salesData.data.percentage);
+            if (filter ==="This Year"){
+            $('#salesDes').text(salesData.data.description + "  than previous year");
+            }else{
+             $('#salesDes').text(salesData.data.description + " than previous month"); 
+            }
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+
+
+
+{{!-- revenue box --}}
+
+
+  document.querySelectorAll('.revenue-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/revenuereport/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#revdate').text("| " + filter); 
+            $('#revenue').text(salesData.data.today);
+            $('#revPercentage').text(salesData.data.percentage);
+            
+            $('#revenuedes').text(salesData.data.description);            
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+
+
+{{!-- customers box --}}
+
+
+  document.querySelectorAll('.customers-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/customerreport/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#customersday').text("| " + filter); 
+            $('#customerNo').text(salesData.data.today);
+            $('#customerPercentage').text(salesData.data.percentage);
+            
+            $('#customerdes').text(salesData.data.description);            
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+  {{!-- ----------------------************weekGraph*************------------------------------ --}}
+
+
+
+ const updateChart = (revenueData, salesData, userData,xelem) => {
+            const chart = new ApexCharts(document.querySelector("#reportsChart"), {
+                series: [{
+                    name: 'Sales',
+                    data: salesData,
+                }, {
+                    name: 'Revenue',
+                    data: revenueData
+                }, {
+                    name: 'Customers',
+                    data: userData
+                }],
+                chart: {
+                    height: 350,
+                    type: 'area',
+                    toolbar: {
+                        show: false
+                    },
+                },
+                markers: {
+                    size: 4
+                },
+                colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.3,
+                        opacityTo: 0.4,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    categories: xelem
+                }
+            });
+            chart.render();
+        };
+ 
+     document.addEventListener("DOMContentLoaded", () => {
+        const weekrevenueData = {{{jsonStringify weekrevenue}}}; 
+        const weeksalesData = {{{jsonStringify weeksales}}}; 
+        const weekuserData = {{{jsonStringify weekcustomers}}}; 
+
+        // Initial chart rendering
+        updateChart(Object.values(weekrevenueData), Object.values(weeksalesData), Object.values(weekuserData),Object.keys(weekuserData));
+    });
+
+
+document.querySelectorAll('.report-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/report/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData); 
+                      $('#reportdet').text("| " + filter); 
+
+           const revenue = salesData.data.revenue; 
+        const sales = salesData.data.sales; 
+        const user = salesData.data.customers;    
+            document.querySelector("#reportsChart").innerHTML = '';
+
+         updateChart(Object.values(revenue), Object.values(sales), Object.values(user),Object.keys(user));       
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+  
+{{!----------------------- top Product --------------------}}
+
+
+  document.querySelectorAll('.topProduct-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/topProductFilter/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#topProductday').text("| " + filter);
+           var tableBody = $('#topProductBody');
+           tableBody.empty();
+
+           // Append new data to table body
+           salesData.data.forEach(product => {
+            console.log("product:",product)
+             var row = `
+               <tr>
+                 <th scope="row"><a href="#"><img src="data:${product.images[0].contentType};base64,${product.images[0].imageBase64}" style="height: 40px;"/></a></th>
+                 <td><a href="#" class="text-primary fw-bold">${product.productName}</a></td>
+                 <td>₹${product.price}</td>
+                 <td class="fw-bold">${product.quantitySold}</td>
+                 <td>₹${product.revenue}</td>
+               </tr>
+             `;
+                row += '</td>'; // End of the options column
+        tableBody.append(row);
+           }); 
+
+
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+
+  
+{{!----------------------- top Brand --------------------}}
+
+
+  document.querySelectorAll('.topBrand-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/topBrandFilter/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#topBrandday').text("| " + filter);
+           var tableBody = $('#topBrandBody');
+           tableBody.empty();
+
+           // Append new data to table body
+           salesData.data.forEach(product => {
+             var row = `
+               <tr>
+                 <th scope="row"><a href="#"><img src="/images/brand_log/${product._id}.jpg" /></a></th>
+                 <td><a href="#" class="text-primary fw-bold">${product._id}</a></td>
+                 <td class="fw-bold">${product.quantitySold}</td>
+                 <td>₹${product.revenue}</td>
+               </tr>
+             `;
+                row += '</td>'; // End of the options column
+        tableBody.append(row);
+           }); 
+
+
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+
+
+
+{{!----------------------- top Category --------------------}}
+
+
+  document.querySelectorAll('.topCategory-dropdown').forEach(item => {
+    item.addEventListener('click', async event => {
+      event.preventDefault();
+      const filter = event.target.getAttribute('data-filter');
+      try {
+         const response = await fetch(`/admin/topCategoryFilter/${filter}`);
+         console.log("sales:",response)
+         if (response.ok) {
+           const salesData = await response.json(); // Parse response body as JSON
+           console.log("Sales data:", salesData);
+           $('#topCategoryday').text("| " + filter);
+           var tableBody = $('#topCategoryBody');
+           tableBody.empty();
+
+           // Append new data to table body
+           salesData.data.forEach(product => {
+             var row = `
+               <tr>
+                 <td><a href="#" class="text-primary fw-bold">${product._id}</a></td>
+                 <td class="fw-bold">${product.quantitySold}</td>
+                 <td>₹${product.revenue}</td>
+               </tr>
+             `;
+                row += '</td>'; // End of the options column
+        tableBody.append(row);
+           }); 
+
+
+         } else {
+           console.error("Failed to fetch sales data. Status:", response.status);
+         }
+      } catch (error) {
+          console.error("Error fetching sales data:", error);
+      }
+    });
+  });
+
+
+  {{!-- ----------------------*************************------------------------------ --}}
+
+</script>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.min.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

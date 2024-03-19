@@ -1,0 +1,132 @@
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.css" />
+
+
+    <style>
+        #myTable-wrapper {
+            margin-top: 40px; 
+            padding-top: 50px;
+        }
+    </style>
+
+    
+<section>
+    <div class="container">
+        <div class="row">
+            <a href="/admin/add-sub-category" class="btn ml-auto" style="background-color: #ee6780; color: #DFDCDC; margin-top: 10px; width: 200px; margin-bottom: 10px;"> + Add Sub Category</a>
+        </div>
+        <div class="table-responsive">
+        <table class="table mt-4" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 5%">No</th>
+                    <th scope="col" style="width: 15%">sub Category Name</th>
+                    <th scope="col" style="width: 15%">Parent Category Name</th>
+                    <th scope="col" style="width: 15%">Created at</th>
+                    <th scope="col" style="width: 10%">Updated at</th>
+                    <th scope="col" style="width: 10%">Options</th>
+
+
+                </tr>
+            </thead>
+             <tbody>
+            {{#each response}}
+                <tr>
+                    <td scope="row">1</td>
+                    <td>{{this.subcategories}}</td>
+                    <td>{{this.name}}</td>
+                    <td>{{this.created_at}}</td>
+                    <td>{{this.updated_at}}</td>
+                    <td><a href="admin/edit-subCategory/{{this._id}}/{{this.subcategories}}/{{this.name}}" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-danger" onclick="showDeleteConfirmation('{{this.subcategories}}', '{{this.name}}')">Delete</a></td>                    
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</section>
+
+
+
+<script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.js"></script>
+<script>
+
+ $(document).ready(function () {
+        $('#myTable').DataTable({
+             responsive: true 
+        } 
+        );
+    });
+</script>
+
+<script>
+    function showDeleteConfirmation(subcategory, maincategory) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to Delete <strong id="productNameToDelete">${subcategory}</strong> from the main category <strong id="proT">${maincategory}</strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete('${maincategory}', '${subcategory}')">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox() {
+        $('#deleteConfirmationModal').modal('hide');
+    }
+
+    function confirmDelete(maincategory, subcategory) {
+        // Handle the delete operation here
+        console.log('Deleting subcategory:', subcategory, 'from main category:', maincategory);
+
+        // Make a GET request to delete the subcategory
+        fetch(`/admin/delete-subcategory/${maincategory}/${subcategory}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log('Subcategory deleted successfully');
+                // Reload the page after successful deletion
+                location.reload();
+            } else {
+                console.error('Error deleting subcategory:', data.error);
+            }
+
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+</script>

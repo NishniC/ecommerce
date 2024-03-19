@@ -1,0 +1,102 @@
+<head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/css/multi-select-tag.css">
+</head>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+  <br>
+  <div class="row">
+    <div class="col-lg-12">
+        <div class="ml-5 text-center">
+          <h2 class="ml-3 mt-3 " >Add Coupons</h2>
+        </div>
+    </div>
+  </div>
+  <form  id="formsub" >
+    <div class="row m-5 p-3" style="background-color:white;">
+        <div class="col-lg-6 primary">
+            <div class="mb-3">
+                <label class="form-label" for="offer_name">Offer Name</label>
+                <input type="text" class="form-control" id="offer_name" name="offer_name" placeholder="" />
+                <div class="offername error" style="color: red;"></div>            
+            </div>
+                                <div class="mb-3">
+                        <label for="">Category</label>
+                        <select name="Category" id="category" class="form-control" multiple>
+                            {{#each categories}}
+                            <option value="{{this.name}}">{{this.name}}</option>
+                            {{/each}}
+                        </select>
+                        <div class="category error" style="color: red;"></div>
+                    </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="typeoffer">Type</label>
+                <select name="typeoffer" id="typeoffer" class="form-control">
+                    <option value="Percentage">Percentage</option>
+                    <option value="Flat Offer">Flat offer</option>
+                </select>
+                <div class="typeoffer error" style="color: red;"></div>            
+            </div>
+             </div>
+             <div class="col-lg-6">
+            <div class="mb-3">
+                <label class="form-label" for="minimum_amount">Discount</label>
+                <input type="text" class="form-control" id="minimum_amount" name="discount" placeholder="" />
+                <div class="discount error" style="color: red;"></div>                        
+            </div>
+       
+        
+            <div class="mb-3">
+                <label class="form-label" for="valid_from">Valid From </label>
+                <input type="datetime-local" class="form-control" id="valid_from" name="valid_from" />
+                <div class="from error" style="color: red;"></div>                        
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="valid_to">Valid To</label>
+                <input type="datetime-local" class="form-control" id="valid_to" name="valid_to" />
+                <div class="to error" style="color: red;"></div>            
+            </div>
+            <button type="submit" class="btn btn-primary">Add Coupon</button>
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@2.0.1/dist/js/multi-select-tag.js"></script>
+ <script>
+    new MultiSelectTag('category')  
+</script>   
+    
+<script>
+    $("#formsub").submit((e) => {
+        e.preventDefault();
+        $.ajax({
+            url: "/admin/add-categoryoffer",
+            method: 'post',
+            data: $('#formsub').serialize(),
+            success: (response) => {
+                console.log("response", response);
+                location.href="/admin/view-offerModule"
+            },
+            error: (xhr, status, error) => {
+                try {
+                const errorObj = JSON.parse(xhr.responseText);
+                console.error("Error:", errorObj.message.category);
+                document.querySelector('.category.error').textContent = errorObj.message.category || '';
+                document.querySelector('.offername.error').textContent = errorObj.message.offer_name|| '';
+                document.querySelector('.to.error').textContent = errorObj.message.valid_to|| '';
+                document.querySelector('.from.error').textContent = errorObj.message.valid_from || '';
+                document.querySelector('.discount.error').textContent = errorObj.message.discount || '';
+                document.querySelector('.typeoffer.error').textContent = errorObj.message.typeoffer || '';
+  
+                } catch (parseError) {
+                    console.error("Error parsing response:", parseError);
+                }
+            }
+        });
+    });
+</script>
+
+</html>

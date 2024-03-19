@@ -1,0 +1,146 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<style>
+    body{margin-top:20px;
+background:#eee;
+}
+.card {
+    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
+}
+.avatar.sm {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: .818125rem;
+}
+.table-nowrap .table td, .table-nowrap .table th {
+    white-space: nowrap;
+}
+.table>:not(caption)>*>* {
+    padding: 0.75rem 1.25rem;
+    border-bottom-width: 1px;
+}
+table th {
+    font-weight: 600;
+    background-color: #eeecfd !important;
+}
+</style>
+<div class="container">
+
+<a href="/user/add-address" class="btn ml-auto" style="background-color: #ee6780; color: #DFDCDC; margin-top: 10px; width: 200px;"> add address</a>
+    <div class="row">
+        <div class="col-12 mb-3 mb-lg-5">
+            <div class="overflow-hidden card table-nowrap table-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">New address</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0" id="myTable">
+                        <thead class="small text-uppercase bg-body text-muted">
+                            <tr>
+                                <th>Name</th>
+                                <th>Housename</th>
+                                <th>townCity</th>
+                                <th>State</th>
+                                <th>postcodeZIP</th>
+                                <th>phone</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each address}}
+                            <tr class="align-middle">
+                                <td>
+                                <div class="h6 mb-0 lh-1">{{this.firstName}}</div>                                    
+                                </td>
+                                <td>{{this.houseName}}</td>
+                                <td> <span class="d-inline-block align-middle">{{this.townCity}}</span></td>
+                                <td><span>{{this.stateCounty}}</span></td>
+                                <td>{{this.postcodeZIP}}</td>
+                                <td>{{this.phone}}</td>
+                                <td class="text-end">
+                                    <a href="/user/edit-address/{{this._id}}" class="btn btn-primary" >Edit</a>
+                    <a href="#" class="btn btn-danger" onclick="showDeleteConfirmation('{{this._id}}')">Delete</a></td>                    
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
+</script>
+<script>
+       function showDeleteConfirmation(addressId) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this product?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('${addressId}')">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox(){
+            $('#deleteConfirmationModal').modal('hide');
+    }
+
+    function confirmDelete(addressId) {
+        // Handle the delete operation here
+        console.log('Deleting product with ID:', addressId);
+
+        // Make a GET request to delete the product
+        fetch(`/user/delete-address/${addressId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log('Product deleted successfully');
+                location.reload()
+                // Add any additional logic you need after successful deletion
+            } else {
+                console.error('Error deleting product:', data.error);
+                // Handle the error
+            }
+
+            // Close the modal
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+</script>

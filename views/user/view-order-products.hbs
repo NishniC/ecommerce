@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <style>
+    body { background: #eee; }
+    .ratings i { font-size: 16px; color: red; }
+    .strike-text { color: red; text-decoration: line-through; }
+    .product-image { width: 100%; }
+    .dot { height: 7px; width: 7px; margin-left: 6px; margin-right: 6px; margin-top: 3px; background-color: blue; border-radius: 50%; display: inline-block; }
+    .spec-1 { color: #938787; font-size: 15px; }
+    h5 { font-weight: 400; }
+    .para { font-size: 16px; }
+  </style>
+</head>
+<body>
+
+{{#if orderedProducts}}
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-center row">
+         <h2 class="col-md-12 text-center">Your Orders</h2>
+        <div class="col-md-10">
+            {{#each orderedProducts}} 
+            <div class="row p-2 bg-white border rounded">
+                <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="data:{{this.product.images.[0].contentType}};base64,{{this.product.images.[0].imageBase64}}" ></div>
+                <div class="col-md-6 mt-1">
+                    <h5>{{this.product.Name}}</h5>
+                    <div class="d-flex flex-row">
+                        <div class="ratings mr-2"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div><span>310</span>
+                    </div>
+                    <div class="mt-1 mb-1 spec-1"><span>quantity:{{this.quantity}}</span></div>
+                    <p class="text-justify text-truncate para mb-0">{{this.product.Description}}.<br><br></p>
+                </div>
+                <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                    <div class="d-flex flex-row align-items-center">
+                        <h4 class="mr-1">Rs.{{this.product.price}}</h4>
+                    </div>
+                    <h6 class="text-success">Free shipping</h6>
+                    <div class="d-flex flex-column mt-4">
+                      <button class="btn btn-primary btn-sm" type="button">Details</button>
+                      <button class="btn btn-danger btn-sm mt-2 remove-order-item" type="button" data-toggle="modal" data-target="#cancelModal" data-cartid="{{this._id}}" data-proid="{{this.product._id}}">Cancel Order</button>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+{{/if}}
+
+{{#if cancelProducts}}
+<div class="container mt-5 mb-5" style="height: 5cm;">
+    <div class="d-flex justify-content-center row">
+         <h2 class="col-md-12 text-center">Canceled Orders</h2>
+        <div class="col-md-10">
+            {{#each cancelProducts}} 
+            <div class="row p-2 bg-white border rounded">
+                <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" style="max-height: 60px; max-width: 70px;" src="data:{{this.product.images.[0].contentType}};base64,{{this.product.images.[0].imageBase64}}" ></div>
+                <div class="col-md-6 mt-1">
+                    <h5>{{this.product.Name}}</h5>
+                    <h6 class="mr-1" style="color: red;">Reason:{{this.reason}}</h6>
+                </div>
+                <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                    <div class="pull-right"><label class="label label-danger" style=" color: rgb(208, 29, 29); ">You Cancelled This Order</label></div>
+                    <div class="btn btn-primary btn-sm"><button class="btn btn-primary btn-sm" type="button">Details</button></div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+{{/if}}
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelModalLabel">Cancel Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="cancelReason">Enter reason for cancellation:</label>
+        <textarea class="form-control" id="cancelReason" rows="3"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitCancelOrder()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add this event listener for the Remove button
+  $('.remove-order-item').on('click', function (e) {
+    e.preventDefault();
+    const cartId = $(this).data('cartid');
+    const proId = $(this).data('proid');
+
+    // Set data attributes for the modal
+    $('#cancelModal').data('cartid', cartId);
+    $('#cancelModal').data('proid', proId);
+  });
+
+  // Function to remove a cart item
+  function removeItem(cartId, proId, reason) {
+    $.ajax({
+      url: '/user/remove-order-item',
+      data: {
+        cart: cartId,
+        product: proId,
+        reason: reason
+      },
+      method: 'post',
+      success: (response) => {
+        console.log(response);
+
+        console.log('Item removed successfully');
+        if (response.isProductsEmpty) {
+          location.reload("/user/view-order-products/{{this._id}}");
+        } else {
+          location.reload("/user/view-order-products/{{this._id}}");
+        }
+      },
+      error: (error) => {
+        console.error('Error removing item:', error);
+      }
+    });
+  }
+
+  function submitCancelOrder() {
+    const cartId = $('#cancelModal').data('cartid');
+    const proId = $('#cancelModal').data('proid');
+    const reason = $('#cancelReason').val();
+
+    // Call the removeCartItem function with reason
+    removeItem(cartId, proId, reason);
+
+    // Close the modal after submission
+    $('#cancelModal').modal('hide');
+  }
+</script>
+
+</body>
+</html>

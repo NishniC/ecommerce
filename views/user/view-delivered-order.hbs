@@ -1,0 +1,297 @@
+<style>
+ 
+
+#progressbar-1 {
+color: #455A64;
+}
+
+#progressbar-1 li {
+list-style-type: none;
+font-size: 13px;
+width: 33.33%;
+float: left;
+position: relative;
+}
+
+#progressbar-1 #step1:before {
+content: "1";
+color: #fff;
+width: 29px;
+margin-left: 22px;
+padding-left: 11px;
+}
+
+#progressbar-1 #step2:before {
+content: "2";
+color: #fff;
+width: 29px;
+}
+
+#progressbar-1 #step3:before {
+content: "3";
+color: #fff;
+width: 29px;
+margin-right: 22px;
+text-align: center;
+}
+
+#progressbar-1 li:before {
+line-height: 29px;
+display: block;
+font-size: 12px;
+background: #455A64;
+border-radius: 50%;
+margin: auto;
+}
+
+#progressbar-1 li:after {
+content: '';
+width: 121%;
+height: 2px;
+background: #455A64;
+position: absolute;
+left: 0%;
+right: 0%;
+top: 15px;
+z-index: -1;
+}
+
+#progressbar-1 li:nth-child(2):after {
+left: 50%
+}
+
+#progressbar-1 li:nth-child(1):after {
+left: 25%;
+width: 121%
+}
+
+#progressbar-1 li:nth-child(3):after {
+left: 25%;
+width: 50%;
+}
+
+#progressbar-1 li.active:before,
+#progressbar-1 li.active:after {
+background: #1266f1;
+}
+
+.card-stepper {
+z-index: 0
+}
+</style>
+
+
+<body>
+
+  {{#each products}} 
+    <section class="vh-100 gradient-custom-2">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-10 col-lg-8 col-xl-6">
+        <div class="card card-stepper" style="border-radius: 16px;">
+          <div class="card-header p-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-2"> Order ID <span class="fw-bold text-body">{{this.referenceId}}</span></p>
+                <p class="text-muted mb-0"> Delivered On <span class="fw-bold text-body">{{this.formattedDate}}</span> </p>
+              </div>
+              <div>
+                <h6 class="mb-0" style="color: green;">Successfully Delivered</h6>
+                <h6 class="mb-0" style="color: rgb(20, 138, 171); margin-top: 0.5cm;" ><a style="color: rgb(171, 20, 78); margin-top: 0.5cm; text-decoration: none;" href="/user/invoice/{{this.referenceId}}">View Invoice</a></h6>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex flex-row mb-4 pb-2">
+              <div class="flex-fill">
+                <h5 class="bold">{{this.product.Name}}</h5>
+                <p class="text-muted"> Qt: {{this.quantity}} item</p>
+                <h4 class="mb-3"> {{this.product.price}} <span class="small text-muted"> via {{this.payment}} </span></h4>
+              </div>
+              <div>
+                <img class="align-self-center img-fluid"
+                  src="data:{{this.product.images.[0].contentType}};base64,{{this.product.images.[0].imageBase64}}" style="height: 4cm; width: 4cm;">
+              </div>
+            </div>
+          </div>
+          <div class="card-footer p-4">
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-success btn-xs" style="margin-left: 0.5cm;">  Buy it again</button>
+              <div class="border-start h-100"></div>
+              <button type="button" class="btn btn-info btn-xs" style="margin-left: 0.5cm;" data-toggle="modal" data-target="#cancelModal" data-orderid="{{this.referenceId}}" data-proid="{{this.product._id}}">Replace</button>
+              <div class="border-start h-100"></div>
+               <button type="button" class="btn btn-warning btn-xs" style="margin-left: 0.5cm;" data-toggle="modal" data-target="#returnModal" data-orderid="{{this.referenceId}}" data-proid="{{this.product._id}}">  Return</button>
+              <div class="border-start h-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{/each}}
+
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="returnModalLabel">Replace Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="cancelReason">Enter reason for Replacement:</label>
+        <textarea class="form-control" id="cancelReason" rows="3"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitCancelOrder()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="returnModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="returnModalLabel">Return Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="returnReason">Enter reason for Return:</label>
+        <textarea class="form-control" id="returnReason" rows="3"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitreturnOrder()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function() {
+  // Event listener for the replace button
+  $('.btn-info').on('click', function(e) {
+    e.preventDefault();
+    const orderId = $(this).data('orderid');
+    const proId = $(this).data('proid');
+    $('#cancelModal').data('orderid', orderId); // Update data attribute name
+    $('#cancelModal').data('proid', proId); // Update data attribute name
+  });
+});
+
+  $(document).ready(function() {
+  // Event listener for the replace button
+  $('.btn-warning').on('click', function(e) {
+    e.preventDefault();
+    const orderId = $(this).data('orderid');
+    const proId = $(this).data('proid');
+    $('#returnModal').data('orderid', orderId); // Update data attribute name
+    $('#returnModal').data('proid', proId); // Update data attribute name
+  });
+});
+
+  $('.remove-order-item').on('click', function (e) {
+    e.preventDefault();
+    const orderId = $(this).data('orderid');
+    const proId = $(this).data('proid');
+
+    // Set data attributes for the modal
+    $('#cancelModal').data('cartid', orderId);
+    $('#cancelModal').data('proid', proId);
+  });
+
+
+
+
+  // Function to remove a cart item
+  function removeItem(orderId, proId, reason) {
+    $.ajax({
+      url: '/user/replace-order-item',
+      data: {
+        cart: orderId,
+        product: proId,
+        reason: reason
+      },
+      method: 'post',
+      success: (response) => {
+        console.log(response);
+
+        console.log('Item removed successfully');
+        if (response.success) {
+          console.log("ref:",response.response.order.referenceNo)
+          window.location.href = "/user/replaced-order/" + response.response.order.referenceNo
+        } else {
+
+        }
+      },
+      error: (error) => {
+        console.error('Error removing item:', error);
+      }
+    });
+  }
+
+  function submitCancelOrder() {
+    const orderId = $('#cancelModal').data('orderid');
+    const proId = $('#cancelModal').data('proid');
+    const reason = $('#cancelReason').val();
+    console.log("car:",orderId,proId,reason)
+    // Call the removeCartItem function with reason
+    removeItem(orderId, proId, reason);
+    // Close the modal after submission
+    $('#cancelModal').modal('hide');
+  }
+
+
+  function submitreturnOrder() {
+    const orderId = $('#returnModal').data('orderid');
+    const proId = $('#returnModal').data('proid');
+    const reason = $('#returnReason').val();
+    console.log("car:",orderId,proId,reason)
+    // Call the removeCartItem function with reason
+    returnItem(orderId, proId, reason);
+    // Close the modal after submission
+    $('#cancelModal').modal('hide');
+  }
+
+
+
+   function returnItem(orderId, proId, reason) {
+    $.ajax({
+      url: '/user/return-order-item',
+      data: {
+        cart: orderId,
+        product: proId,
+        reason: reason
+      },
+      method: 'post',
+      success: (response) => {
+        console.log(response);
+
+        console.log('Item removed successfully');
+        if (response.success) {
+          console.log("ref:",response.response.order.referenceNo)
+          window.location.href = "/user/return-order/" + response.response.order.referenceNo+"/" + response.response.order.userId
+        } else {
+
+        }
+      },
+      error: (error) => {
+        console.error('Error removing item:', error);
+      }
+    });
+  }
+</script>
+

@@ -1,0 +1,212 @@
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.css" />
+
+
+    <style>
+        #myTable-wrapper {
+            margin-top: 40px; 
+            padding-top: 50px;
+        }
+         .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+
+    .pagination .page-item {
+        margin: 0 5px;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #ee6780;
+        border-color: #ee6780;
+        color: #fff;
+    }
+
+    .pagination .page-link {
+        color: #ee6780;
+        border: 1px solid #ee6780;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #ceabab;
+    }
+    </style>
+<section>
+    <div class="container">
+        <div class="row">
+            <a href="/admin/add-product" class="btn ml-auto" style="background-color: #ee6780; color: #DFDCDC; margin-top: 10px; width: 200px; margin-bottom: 10px;"> + Add Product</a>
+        </div>
+        <div class="table-responsive">
+        <table class="table mt-4" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 5%">No</th>
+                    <th scope="col" style="width: 15%">Title</th>
+                    <th scope="col" style="width: 15%">Category</th>
+                    <th scope="col" style="width: 10%">Price</th>
+                    <th scope="col" style="width: 15%">Quantity</th>
+                    <th scope="col" style="width: 15%" >Image</th>
+                    <th scope="col" style="width: 15%">Options</th>
+                    <th scope="col" style="width: 15%">Acttions</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td scope="row">{{this.index}}</td> 
+                    <td>{{this.Name}}</td>
+                    <td>{{this.Category}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td><img src="data:{{this.images.[0].contentType}};base64,{{this.images.[0].imageBase64}}" style="width: 50px; height: 50px;"></td>
+                    <td><a href="/admin/edit-product/{{this._id}}" class="btn btn-primary">Edit</a></td>   
+                    <td><a href="#" class="btn btn-danger" onclick="showDeleteConfirmation('{{this._id}}', '{{this.Name}}')">Delete</a></td>                   
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{!-- <div class="col-lg-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">                    
+                    {{#times pages}}                     
+                    {{#ifCond this '==' ../currentPage}}                   
+                        <li class="page-item active"><a class="page-link" href="/admin/view-product?page={{this}}">{{this}}</a></li>                        
+                    {{else}}                   
+                        <li class="page-item"><a class="page-link" href="/admin/view-product?page={{this}}">{{this}}</a></li>                        
+                    {{/ifCond}}
+                    {{/times}}
+                </ul>
+            </nav>
+        </div> --}}
+
+         <div class="col-lg-12" style="margin-top: 15px;">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">                    
+            {{#if isFirstPage}}
+                                       
+            {{else}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-product?page={{prevPage}}"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                </li>
+            {{/if}}
+
+            {{#if currentPage}}
+                <li class="page-item active">
+                    <a class="page-link" href="/admin/view-product?page={{currentPage}}">{{currentPage}}</a>
+                </li>
+                {{#ifCond  currentPage '!=' next}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-product?page={{next}}">{{next}}</a>
+                </li>
+                {{/ifCond}}
+            {{/if}}
+             {{#ifCond  totalPages '!=' next}}
+            {{#if nextPage}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-product?page={{nextPage}}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                </li>
+            {{/if}}
+            {{/ifCond}}
+        </div>
+    </div>
+</section>
+
+
+
+<script src="//cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.js"></script>
+<script>
+
+ $(document).ready(function () {
+        $('#myTable').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [5,6,7] } // Assuming the column index for 'Image' is 6
+            ],
+             responsive: true ,
+            "bPaginate": false,
+            "bInfo": false,
+        } 
+        );
+    });
+</script>
+
+<script>
+
+    function showDeleteConfirmation(productId, productName) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="productNameToDelete">${productName}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('${productId}')">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox(){
+            $('#deleteConfirmationModal').modal('hide');
+    }
+
+    function confirmDelete(productId) {
+        // Handle the delete operation here
+        console.log('Deleting product with ID:', productId);
+
+        // Make a GET request to delete the product
+        fetch(`/admin/delete-product/${productId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                console.log('Product deleted successfully');
+                location.reload()
+                // Add any additional logic you need after successful deletion
+            } else {
+                console.error('Error deleting product:', data.error);
+                
+            }
+
+            // Close the modal
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+    
+</script>

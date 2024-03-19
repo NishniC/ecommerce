@@ -1,0 +1,311 @@
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+    <style>
+        #myTable-wrapper {
+            margin-top: 40px; 
+            padding-top: 50px;
+        }
+  .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style: none;
+    }
+
+    .pagination .page-item {
+        margin: 0 5px;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #ee6780;
+        border-color: #ee6780;
+        color: #fff;
+    }
+
+    .pagination .page-link {
+        color: #ee6780;
+        border: 1px solid #ee6780;
+        padding: 5px 10px;
+        border-radius: 3px;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #ceabab;
+    }
+    </style>
+<section>
+    <div class="container">
+        <div class="row">
+            <a href="/admin/add-user" class="btn ml-auto" style="background-color: #ee6780; color: #DFDCDC; margin-top: 10px; width: 200px;"> + Add User</a>
+        </div>
+        <div class="table-responsive">
+        <table class="table mt-4" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 5%">No</th>
+                    <th scope="col" style="width: 15%">First Name</th>
+                    <th scope="col" style="width: 15%">Last Name</th>
+                    <th scope="col" style="width: 15%">Email</th>
+                    <th scope="col" style="width: 15%">Options</th>
+                    <th scope="col" style="width: 15%">Remove Options</th>
+                    
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+                {{#each users}}
+                <tr>
+                    <td scope="row">{{this.index}}</td>
+                    <td>{{this.firstName}}</td>
+                    <td>{{this.lastName}}</td>
+                    <td>{{this.email}}</td>
+                    <td>
+                    <a href="/admin/edit-user/{{this._id}}" class="btn btn-primary">Edit</a></td>
+
+                   <td> 
+                    {{#if this.access}}
+                    <a href="#" class="btn btn-danger" onclick="showDeleteConfirmation('{{this._id}}', '{{this.Name}}')">block</a>
+                    {{else}}
+                    <a href="#" class="btn btn-success" onclick="showunblockConfirmation('{{this._id}}', '{{this.Name}}')">unblock</a>
+                    {{/if}}
+                    </td>                    
+             
+
+                {{/each}}
+            </tbody>
+        </table>
+
+        </div>
+         {{!-- <div class="col-lg-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">                    
+                    {{#times pages}}                     
+                    {{#ifCond this '==' ../currentPage}}                   
+                        <li class="page-item active"><a class="page-link" href="/admin/view-user?page={{this}}">{{this}}</a></li>                        
+                    {{else}}                   
+                        <li class="page-item"><a class="page-link" href="/admin/view-user?page={{this}}">{{this}}</a></li>                        
+                    {{/ifCond}}
+                    {{/times}}
+                </ul>
+            </nav>
+        </div> --}}
+
+       <div class="col-lg-12" style="margin-top: 15px;">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">                    
+            {{#if isFirstPage}}
+                                       
+            {{else}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-user?page={{prevPage}}"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+                </li>
+            {{/if}}
+
+            {{#if currentPage}}
+                <li class="page-item active">
+                    <a class="page-link" href="/admin/view-user?page={{currentPage}}">{{currentPage}}</a>
+                </li>
+                {{#ifCond  currentPage '!=' next}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-user?page={{next}}">{{next}}</a>
+                </li>
+                {{/ifCond}}
+            {{/if}}
+             {{#ifCond  totalPages '!=' next}}
+            {{#if nextPage}}
+                <li class="page-item">
+                    <a class="page-link" href="/admin/view-user?page={{nextPage}}"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                </li>
+            {{/if}}
+            {{/ifCond}}
+        </ul>
+    </nav>
+</div>
+
+
+
+
+    </div>
+</section>
+
+
+<script>
+    $(document).ready( function () {
+    $('#myTable').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": [3,4,5] } // Assuming the column index for 'Image' is 6
+            ],
+        "bPaginate": false,
+            "bInfo": false,
+    });
+} );
+</script>
+
+<script>
+
+    function populateTable(users) {
+    var tableBody = $('#tablebody');
+    tableBody.empty(); // Clear existing data
+    users.forEach(function(user) {
+        var row = '<tr>' +
+            '<td>' + 1 + '</td>' +
+            '<td>' + user.firstName + '</td>' +
+            '<td>' + user.lastName + '</td>' +
+            '<td>' + user.email + '</td>' +
+            '<td>' +
+            '<a href="/admin/edit-user/' + user._id + '" class="btn btn-primary">Edit</a>' +
+            '</td>' +
+            '<td>'; // Start of the options column
+        if (user.access) {
+            row += '<a href="#" class="btn btn-danger" onclick="showDeleteConfirmation(\'' + user._id + '\', \'' + user.Name + '\')">block</a>';
+        } else {
+            row += '<a href="#" class="btn btn-success" onclick="showunblockConfirmation(\'' + user._id + '\', \'' + user.Name + '\')">unblock</a>';
+        }
+        row += '</td>'; // End of the options column
+        tableBody.append(row);
+    });
+}
+
+
+
+    {{!-- block --}}
+    function showDeleteConfirmation(userId, userName) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="canceldeleteBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to Block <strong id="productNameToDelete">${userName}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="canceldeleteBox()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('${userId}')">Block</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#deleteConfirmationModal').modal('show');
+    }
+
+    function canceldeleteBox(){
+            $('#deleteConfirmationModal').modal('hide');
+    }
+    function confirmDelete(userId) {
+        // Handle the delete operation here
+        console.log('Deleting user with ID:', userId);
+
+        // Make a GET request to delete the product
+        fetch(`/admin/delete-user/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("my data:",data)
+            if (data.status) {
+                console.log('Product deleted successfully');
+                populateTable(data.users);
+                
+
+            } else {
+                console.error('Error deleting product:', data.error);
+                // Handle the error
+            }
+
+            // Close the modal
+            $('#deleteConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            // Handle the error
+            // Close the modal if needed
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+    
+{{!-- unbock --}}
+
+        function showunblockConfirmation(userId, userName) {
+        var modalHtml = `
+          <div class="modal" tabindex="-1" role="dialog" id="unblockConfirmationModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cancelunblockBox()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to UnBlock <strong id="productNameToDelete">${userName}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="cancelunblockBox()">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="confirmunblock('${userId}')">unBlock</button>
+            </div>
+        </div>
+    </div>
+</div>
+        `;
+
+        // Append the modal HTML to the body
+        $('body').append(modalHtml);
+
+        // Show the modal
+        $('#unblockConfirmationModal').modal('show');
+    }
+
+    function cancelunblockBox(){
+            $('#unblockConfirmationModal').modal('hide');
+    }
+    function confirmunblock(userId) {
+        // Handle the delete operation here
+        console.log('Deleting user with ID:', userId);
+
+        // Make a GET request to delete the product
+        fetch(`/admin/unblock-user/${userId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("my data is:",data)
+            if (data.status) {
+                console.log('Product deleted successfully');
+                populateTable(data.users);
+
+                // Add any additional logic you need after successful deletion
+            } else {
+                console.error('Error deleting product:', data.error);
+                // Handle the error
+            }
+
+            // Close the modal
+            $('#unblockConfirmationModal').modal('hide');
+        })
+        .catch(error => {
+            console.error('Error making GET request:', error);
+            $('#deleteConfirmationModal').modal('hide');
+        });
+    }
+</script>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add necessary meta tags, CSS links, and title -->
+</head>
+<body>
+    <section class="h-100" style="background-color: #f6f3f9;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col">
+                    <div class="card card-registration my-4">
+                        <div class="card-body p-md-5 text-black">
+                            <h3 class="mb-5 text-uppercase" style="color: #b382f5;">Verify OTP</h3>
+
+                            <div id="flash-messages" class="container">
+                                <!-- Display error or success messages here -->
+                                {{#if messages.error}}
+                                    <div class="alert alert-danger">{{messages.error}}</div>
+                                {{/if}}
+                                {{#if messages.success}}
+                                    <div class="alert alert-success">{{messages.success}}</div>
+                                {{/if}}
+                            </div>
+
+                            <form id="otp-form">
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="otp" name="otp" class="form-control form-control-lg" placeholder="Enter OTP" style="border-color: #b382f5;" />
+                                    <div class="otp error" style="color: red;"></div>
+                                </div>
+
+                                <!-- Display the remaining time -->
+                                <div id="timer" class="mb-4"></div>
+
+                                <div class="d-flex justify-content-end pt-3">
+                                    <button type="submit" class="btn btn-lg ms-2" style="background-color: #b382f5;">Verify OTP</button>
+                                    <button type="button" id="resend-btn" class="btn btn-lg ms-2" style="background-color: #b382f5;" disabled>Resend OTP</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const form = document.getElementById('otp-form');
+        const otpError = document.querySelector('.otp.error');
+        const resendBtn = document.getElementById('resend-btn');
+        const timerElement = document.getElementById('timer');
+
+        // Set a timer for 2 minutes (2 * 60 * 1000 milliseconds)
+        let timer = 1 * 60 * 1000;
+
+        // Declare the interval variable in the outer scope
+        let interval;
+
+        // Function to update the timer
+        function updateTimer() {
+            const minutes = Math.floor(timer / (60 * 1000));
+            const seconds = Math.floor((timer % (60 * 1000)) / 1000);
+            timerElement.textContent = `Remaining Time: ${minutes}:${seconds}`;
+            timer -= 1000;
+
+            if (timer < 0) {
+                // Enable the resend button after 2 minutes
+                timerElement.textContent = 'Resend OTP';
+                resendBtn.disabled = false;
+                clearInterval(interval);
+            }
+        }
+
+        // Start the timer
+        interval = setInterval(updateTimer, 1000);
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = form.otp.value;
+
+            try {
+                const res = await fetch("/verify-otp", {
+                    method: "POST",
+                    body: JSON.stringify({ otp }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+
+                if (data.errors) {
+                    otpError.textContent = data.errors.otp;
+                }
+
+                if (data.message) {
+                    window.location.href = "/user";
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+
+        // Resend button click event
+        resendBtn.addEventListener('click', async () => {
+            try {
+                const res = await fetch("/resend-otp", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+
+                if (data.errors) {
+                    console.error("Resend OTP error:", data.errors.general);
+                }
+
+                if (data.message) {
+                    console.log(data.message);
+                    // Disable the resend button
+                    resendBtn.disabled = true;
+
+                    // Reset the timer
+                    timer = 1 * 60 * 1000;
+
+                    // Start the timer again
+                    interval = setInterval(updateTimer, 1000);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

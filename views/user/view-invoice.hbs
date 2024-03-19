@@ -1,0 +1,191 @@
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Correct order: jQuery first, then Bootstrap JavaScript -->
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+
+
+    <style>
+    .invoice-title h2, .invoice-title h3 {
+    display: inline-block;
+}
+
+.table > tbody > tr > .no-line {
+    border-top: none;
+}
+
+.table > thead > tr > .no-line {
+    border-bottom: none;
+}
+
+.table > tbody > tr > .thick-line {
+    border-top: 2px solid;
+}
+ #pdfButton {
+            border-radius: 20px;
+            background-color: orange;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px; /* Adjust as needed */
+            margin-right: 2cm;
+            margin-bottom: 1cm;
+        }
+.sub-menu {
+    display: none;
+}
+
+/* Hide the search section */
+#searchForm {
+    display: none;
+}
+    </style>
+
+
+
+
+        <div class="container invoice-container">
+            <div class="row">
+               <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+    		<div class="invoice-title">
+    			<h2>Invoice</h2><h3 class="pull-right">Order #{{order.id}}</h3>
+    		</div>
+    		<hr>
+    		<div class="row">
+    			<div class="col-xs-6">
+                    
+    				<address>
+    				<strong>Shipped To:</strong><br>
+    					{{address.name}}<br>
+    					{{address.house}}<br>
+    					{{address.city}},{{address.state}}<br>
+    					{{address.postcode}}
+    				</address>
+            
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+        			<strong>From:</strong><br>
+    					Style Savy<br>
+    					Vaisali Complex<br>
+    					Kannur,Kerala<br>
+    					670595
+    				</address>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col-xs-6">
+    				<address>
+    					<strong>Payment Method:</strong><br>
+    					{{order.payment}}<br>
+    					{{address.email}}
+    				</address>
+    			</div>
+    			<div class="col-xs-6 text-right">
+    				<address>
+    					<strong>Order Date:</strong><br>
+    					{{order.date}}<br><br>
+    				</address>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Order summary</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+    					<table class="table table-condensed">
+    						<thead>
+                                <tr>
+        							<td><strong>Item</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                {{#each products}}
+    							<tr>
+    								<td>{{this.name}}</td>
+    								<td class="text-center">₹{{this.price}}</td>
+    								<td class="text-center">{{this.quantity}}</td>
+    								<td class="text-right">₹{{this.totalProductPrice}}</td>
+    							</tr>
+                                {{/each}}
+    							<tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
+    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
+    								<td class="thick-line text-right">₹{{order.subTotal}}</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Shipping</strong></td>
+                                    {{#if order.shipping}}
+    								<td class="no-line text-right">₹{{order.shipping}}</td>
+                                    {{else}}
+                                    <td class="no-line text-right">₹0</td>
+                                    {{/if}}
+    							</tr>
+                                <tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Discount</strong></td>
+    								<td class="no-line text-right">₹{{order.discount}}</td>
+    							</tr>
+                                <tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Gst</strong></td>
+    								<td class="no-line text-right">₹50</td>
+    							</tr>
+    							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Total</strong></td>
+    								<td class="no-line text-right">₹{{order.total}}</td>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>
+</div>
+</div>
+
+        <div class="row">
+            <div class="col-md-12 text-right identity">
+                <button id="pdfButton">
+                    Download Invoice
+                </button>
+            </div>
+        </div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script>
+        document.getElementById("pdfButton").addEventListener("click", function () {
+            const invoiceContainer = document.querySelector(".invoice-container");
+            const pdfOptions = {
+                filename: 'invoice.pdf',
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: [500, 420], orientation: 'portrait' }
+            };
+            html2pdf().from(invoiceContainer).set(pdfOptions).save();
+        });
+    </script>

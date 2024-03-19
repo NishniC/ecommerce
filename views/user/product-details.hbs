@@ -1,0 +1,206 @@
+
+
+<style>.card{border:none}.product{background-color: #eee}.brand{font-size: 13px}.act-price{color:red;font-weight: 700}.dis-price{text-decoration: line-through}.about{font-size: 14px}.color{margin-bottom:10px}label.radio{cursor: pointer}label.radio input{position: absolute;top: 0;left: 0;visibility: hidden;pointer-events: none}label.radio span{padding: 2px 9px;border: 2px solid #ff0000;display: inline-block;color: #ff0000;border-radius: 3px;text-transform: uppercase}label.radio input:checked+span{border-color: #ff0000;background-color: #ff0000;color: #fff}.btn-danger{background-color: #ff0000 !important;border-color: #ff0000 !important}.btn-danger:hover{background-color: #da0606 !important;border-color: #da0606 !important}.btn-danger:focus{box-shadow: none}.cart i{margin-right: 10px}
+      body {
+    font-family: 'Roboto Condensed', sans-serif;
+    background-color: #f5f5f5
+}
+
+.hedding {
+    font-size: 20px;
+    color: #ab8181`;
+}
+
+.main-section {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, 5%);
+}
+
+.left-side-product-box img {
+    width: 100%;
+}
+
+.left-side-product-box .sub-img img {
+    margin-top: 5px;
+    width: 83px;
+    height: 100px;
+}
+
+.right-side-pro-detail span {
+    font-size: 15px;
+}
+
+.right-side-pro-detail p {
+    font-size: 25px;
+    color: #a1a1a1;
+}
+
+.right-side-pro-detail .price-pro {
+    color: #E45641;
+}
+
+.right-side-pro-detail .tag-section {
+    font-size: 18px;
+    color: #5D4C46;
+}
+
+.pro-box-section .pro-box img {
+    width: 100%;
+    height: 200px;
+}
+
+@media (min-width:360px) and (max-width:640px) {
+    .pro-box-section .pro-box img {
+        height: auto;
+    }
+}
+     .product-images {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .thumbnail img {
+        width: 50px; /* Adjust the width as needed */
+        height: 55px; /* Maintain the aspect ratio */
+        margin: 0 5px; /* Add margin for spacing */
+        cursor: pointer;
+    }
+      #image-zoomer-box:hover ,#image-zoomer-box:active {
+        cursor: zoom-in;
+        display: block;
+    }
+    #image-zoomer-box:hover #image-2,#image-zoomer-box:active #image-2{
+        opacity: 1;
+    }
+    #image-2{
+        width: 300px; 
+        height: 300px;
+        position: absolute; 
+        box-shadow: 0 5px 10px 2px rgba(0, 0, 0, 0.3);
+        background: no-repeat;
+        pointer-events: none;
+        opacity: 0;
+        border: 4px solid whitesmoke;
+        border-radius: 100%; 
+        display: block;
+        transition: opacity .2s;
+        z-index: 999;
+    }
+</style>
+
+<script>
+    function changeImage(element) {
+        document.getElementById('main-image').src = element.src;
+        document.getElementById('image-2').style.backgroundImage = 'url(' + element.src + ') ';
+    }
+
+</script>
+
+    <div class="container mt-5 mb-5">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="images p-3">
+                                <div id="imgdiv" class="text-center p-4">
+                                    <div id="image-zoomer-box">
+                                    <img id="main-image" src="data:{{this.product.images.[0].contentType}};base64,{{this.product.images.[0].imageBase64}}"   width="250" />
+                                    <div id="image-2"></div>
+                                </div>
+                                </div>
+                                <div class="thumbnail text-center">
+                                    {{#each product.images}}
+                                        <img src="data:{{contentType}};base64,{{imageBase64}}" alt="{{filename}}" data-lightbox="product-images" onclick="changeImage(this)">
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+                   
+            <div class="col-lg-8">
+                <div class="right-side-pro-detail border p-3 m-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <span>Who What Wear</span>
+                            <p class="m-0 p-0">{{product.Name}}</p>
+                        </div>
+                        <div class="col-lg-12">
+                            <p class="m-0 p-0 price-pro">{{product.price}}</p>
+                            <hr class="p-0 m-0">
+                        </div>
+                        <div class="col-lg-12 pt-2">
+                            <h5>Product Details</h5>
+                            <span>{{product.Description}}</span>
+                            <hr class="m-0 pt-2 mt-2">
+                        </div>
+                        {{!-- <div class="col-lg-12">
+                            <p class="tag-section"><strong>Tag : </strong><a href="">{{product.Category[0]}}</a><a href="">,{{product.subcategories[0]}}</a></p>
+                        </div> --}}
+
+                        <div class="col-lg-12 mt-3">
+                            <div class="row">
+                            <div class="col-lg-6 pb-2">
+                            <h6>Size :</h6>
+                            <div class="form-check form-check-inline">
+                     <select name="size" id="size" class="form-control">
+                        <option value="">Select Size</option>
+                        {{#each product.sizes}}
+                        <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+                          
+            <div class="col-lg-12 mt-3">
+                            <div class="row">
+                                <div class="col-lg-6 pb-2">
+                                    <a href="/user/add-to-cart/{{product._id}}" class="btn btn-danger w-100">Add To Cart</a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <a href="#" class="btn btn-success w-100">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const zoom = function () {
+    const zoomerBox = document.querySelector("#image-zoomer-box");
+    const original = document.querySelector("#main-image");
+    const magnified = document.querySelector("#image-2");
+    const style = magnified.style;
+
+    zoomerBox.addEventListener("mousemove", function (e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const imgWidth = original.offsetWidth;
+        const imgHeight = original.offsetHeight;
+        const xperc = (x / rect.width) * 100;
+        const yperc = (y / rect.height) * 100;
+
+        style.backgroundPositionX = (xperc - 10) + "%";
+        style.backgroundPositionY = (yperc - 10) + "%";
+        style.left = (x - magnified.offsetWidth / 2) + "px";
+        style.top = (y - magnified.offsetHeight / 2) + "px";
+    });
+}();
+
+
+</script>
+
+
+
+

@@ -1,0 +1,160 @@
+    
+    
+    
+    <div class="main-navbar shadow-sm sticky-top">
+        <div class="top-navbar">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block" >
+                        <div style="display: inline-block;">
+                        <button id="goBackButton" onclick="history.back()" style="display: inline-block; background-color: #BB84E8; border-style: none;"><i class="fa fa-arrow-left" style="color: white;" aria-hidden="true"></i></button>
+                        <h5 class="brand-name" style="display: inline-block;">style savvy</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-5 my-auto">
+                        <form role="search" id="searchForm">
+                            <div class="input-group" >
+                                <input id="searchInput" type="search" placeholder="Search your product" class="form-control" />
+                                <button class="btn bg-white" type="submit" id="searchButton">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                    <div class="col-md-5 my-auto">
+                        <ul class="nav justify-content-end">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/cartDetails">
+                                    <i class="fa fa-shopping-cart"></i> Cart <span class="badge badge-light">{{cartCount}}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/user/wishlist">
+                                    <i class="fa fa-heart"></i> Wishlist <span class="badge badge-light">{{wishlistCount}}</span>
+                                </a>
+                            </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="/user/wallet">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wallet" viewBox="0 0 16 16" >
+            <path d="M0 3a2 2 0 0 1 2-2h13.5a.5.5 0 0 1 0 1H15v2a1 1 0 0 1 1 1v8.5a1.5 1.5 0 0 1-1.5 1.5h-12A2.5 2.5 0 0 1 0 12.5zm1 1.732V12.5A1.5 1.5 0 0 0 2.5 14h12a.5.5 0 0 0 .5-.5V5H2a2 2 0 0 1-1-.268M1 3a1 1 0 0 0 1 1h12V2H2a1 1 0 0 0-1 1"/>
+</svg> Wallet <span class="badge badge-light"></span>
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-user"></i> {{user.firstName}} {{user.lastName}}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="/user/user-profile"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="/user/referral-link"><i class="fa fa-share-alt"></i> Refferals</a></li>
+                                <li><a class="dropdown-item" href="/user/myOrderPage/{{user._id}}"><i class="fa fa-list"></i> My Orders</a></li>
+                                <li><a class="dropdown-item" href="/user/wishlist"><i class="fa fa-heart"></i> My Wishlist</a></li>
+                                <li><a class="dropdown-item" href="/user/cartDetails"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                                <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+<nav class="navbar navbar-expand-md navbar-light bg-light sub-menu" >
+  <div class="container">
+    <div class="collapse navbar-collapse" id="navbar" style="background-color: 	#C7B0E2;">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/user/productsfilter?page=1">Products</a>
+        </li>
+        <ul class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Category
+    </a>
+    <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+        {{#each categories}}
+        <a class="dropdown-item" href="/user/category/{{this.name}}">{{this.name}}</a>
+        {{/each}}
+    </div>
+</ul>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Publishers</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Support
+                        </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Delivery Information</a>
+            <a class="dropdown-item" href="#">Privacy Policy</a>
+            <a class="dropdown-item" href="#">Terms & Conditions</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+</header>
+
+<script>
+
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
+const searchForm = document.getElementById('searchForm');
+
+searchButton.addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    const query = searchInput.value.trim();
+    if (query !== '') {
+        fetch(`/user/search?query=${query}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Search results:', data);
+                if(data.success){
+                window.location.href = `/user/searchbutton?query=${query}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+            });
+    }
+});
+
+searchInput.addEventListener('input', function() {
+    const query = this.value.trim();
+    fetch(`/user/search?query=${query}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Search results:', data);
+            displaySearchResults(data);
+        })
+        .catch(error => {
+            console.error('Error fetching search results:', error);
+        });
+});
+
+function displaySearchResults(results) {
+    
+}
+
+</script>
+
+
